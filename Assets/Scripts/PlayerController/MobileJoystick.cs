@@ -16,7 +16,7 @@ public class MobileJoystick : MonoBehaviour
     private Vector3 clickedPosition;
     private Vector3 move;
     private bool canControl;
-    private float maxdistanceOfKnob = 0.1f;
+    private float maxdistanceOfKnob = 0.3f;
     void Start()
     {
         HideJoystick();
