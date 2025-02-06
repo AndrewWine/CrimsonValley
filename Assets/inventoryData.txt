@@ -1,16 +1,3 @@
 {
-    "items": [
-        {
-            "itemType": 1,
-            "amount": 2
-        },
-        {
-            "itemType": 0,
-            "amount": 4
-        },
-        {
-            "itemType": 2,
-            "amount": 3
-        }
-    ]
+    "items": []
 }

@@ -1,18 +1,14 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-[System.Serializable]
+﻿[System.Serializable]
 public class InventoryItem
 {
-    public ItemType itemType;
-    public int amount;
+    public string itemName;  // Tên item
+    public int amount;       // Số lượng item
+    public ItemType itemType;  // Kiểu của món đồ
 
-    // Constructor cho InventoryItem
-    public InventoryItem(ItemType itemType, int amount)
+    public InventoryItem(string itemName, int amount, ItemType itemType)
     {
-        this.itemType = itemType;
+        this.itemName = itemName;
         this.amount = amount;
+        this.itemType = itemType;
     }
-
-
 }

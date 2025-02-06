@@ -1,6 +1,6 @@
 ﻿using System;
 using UnityEngine;
-
+using UnityEngine.UI;
 public class PlayerSnowAbility : MonoBehaviour
 {
     [Header(" Elements ")]
@@ -13,6 +13,7 @@ public class PlayerSnowAbility : MonoBehaviour
     [SerializeField] private ItemData CornData;
     [SerializeField] private ItemData TomatoData;
     private ItemData selectedCropData;
+
 
     [Header(" Actions ")]
     public static Action<ItemData> SownNotify;
@@ -52,21 +53,23 @@ public class PlayerSnowAbility : MonoBehaviour
         unlockCropField = unlock; // Cập nhật trạng thái unlockCropField từ sự kiện
     }
 
-    public void SelectCornSeeds()
+    public void SelectSeeds(Button button)
     {
-        CornData.itemType = ItemType.Corn;
-        selectedCropData = CornData;
-        Debug.Log("SELECTED CORN SEEDS");
-
+        string buttonName = button.gameObject.name; // Lấy tên của GameObject Button
+        if (buttonName == "Corn")
+        {
+            selectedCropData = CornData;
+            Debug.Log("SELECTED CORN SEEDS");
+        }
+        else if (buttonName == "Tomato")
+        {
+            selectedCropData = TomatoData;
+            Debug.Log("SELECTED TOMATO SEEDS");
+        }
     }
 
-    public void SelectTomatoSeeds()
-    {
-        TomatoData.itemType = ItemType.Tomato;
-        selectedCropData = TomatoData;
-        Debug.Log("SELECTED TOMATO SEEDS");
 
-    }
+
 
     public void OnSowButtonPressed()
     {

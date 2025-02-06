@@ -1,15 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEditor;
+﻿using System.IO;
 using UnityEngine;
-using System.IO;
-using System;
 
 [RequireComponent(typeof(InventoryDisplay))]
 public class InventoryManager : MonoBehaviour
 {
-
-
     private Inventory inventory;
     private InventoryDisplay inventoryDisplay;
     private string dataPath;
@@ -17,7 +11,6 @@ public class InventoryManager : MonoBehaviour
     private void Start()
     {
         dataPath = Application.dataPath + "/inventoryData.txt";
-        //inventory = new Inventory();
         LoadInventory();
         ConfigureInventoryDisplay();
         CropTile.onCropHarvested += PickUpItemCallBack;
@@ -28,16 +21,11 @@ public class InventoryManager : MonoBehaviour
     {
         CropTile.onCropHarvested -= PickUpItemCallBack;
         Tree.onPickupWood -= PickUpItemCallBack;
-
     }
 
-
-
-    private void PickUpItemCallBack(ItemType itemType)
+    private void PickUpItemCallBack(string itemName)
     {
-        //Update inventory
-        inventory.CropHarvestedCallback(itemType);
-
+        inventory.AddItemByName(itemName);
         inventoryDisplay.UpdateDisplay(inventory);
         SaveInventory();
     }
@@ -48,7 +36,6 @@ public class InventoryManager : MonoBehaviour
         inventoryDisplay.Configure(inventory);
     }
 
-    [NaughtyAttributes.Button]
     public void ClearInventory()
     {
         inventory.Clear();
@@ -58,21 +45,19 @@ public class InventoryManager : MonoBehaviour
 
     private void LoadInventory()
     {
-        string data = "";
-        if(File.Exists(dataPath))
+        if (File.Exists(dataPath))
         {
-            data = File.ReadAllText(dataPath);
+            string data = File.ReadAllText(dataPath);
             inventory = JsonUtility.FromJson<Inventory>(data);
-            if(inventory == null )
+            if (inventory == null)
                 inventory = new Inventory();
         }
         else
         {
-            File.Create(dataPath);
+            File.Create(dataPath).Close();
             inventory = new Inventory();
         }
     }
-
 
     private void SaveInventory()
     {

@@ -22,7 +22,7 @@ public class PlayerBuyerInteractor : MonoBehaviour
         for (int i = 0; i < items.Length; i++)
         {
             // calculate the earnings
-            int itemPrice = DataManagers.instance.GetCropPriceFromCropType(items[i].itemType);
+            int itemPrice = DataManagers.instance.GetItemPriceFromItemName(items[i].itemName);
             coinsEarned += itemPrice * items[i].amount;
         }
 

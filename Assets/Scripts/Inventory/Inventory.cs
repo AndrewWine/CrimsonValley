@@ -1,67 +1,44 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
 public class Inventory
 {
     [SerializeField] private List<InventoryItem> items = new List<InventoryItem>();
 
-    public void ItemPickedCallBack(ItemType itemType)
+    public void AddItemByName(string itemName)
     {
-        bool itemFound = false;
-        for (int i = 0; i < items.Count; i++)
-        {
-            InventoryItem item = items[i];
+        // Đảm bảo rằng itemType là kiểu ItemType, không phải int
+        ItemData itemData = DataManagers.instance.GetItemDataByName(itemName);
 
-            if (item.itemType == itemType)
+        if (itemData != null)
+        {
+            ItemType itemType = itemData.itemType;
+
+            InventoryItem existingItem = items.Find(item => item.itemName == itemName);
+
+            if (existingItem != null)
             {
-                item.amount++;
-                itemFound = true;
-                break;
+                existingItem.amount++;
+            }
+            else
+            {
+                items.Add(new InventoryItem(itemName, 1, itemType)); // Đảm bảo là itemType là ItemType
             }
         }
-        //DebugInventory();
-
-        if (itemFound)
-            return;
-
-        // Create a new item in the list with that corpType
-        items.Add(new InventoryItem(itemType, 1));
-    }
-
-    public void CropHarvestedCallback(ItemType itemType)
-    {
-        bool cropFound = false;
-
-        for (int i = 0; i < items.Count; i++)
+        else
         {
-            InventoryItem item = items[i];
-
-            if (item.itemType == itemType)
-            {
-                item.amount++;
-                cropFound = true;
-                break;
-            }
+            Debug.LogError("No item found with name: " + itemName);
         }
-        //DebugInventory();
 
-        if (cropFound)
-            return;
-
-        // Create a new item in the list with that corpType
-        items.Add(new InventoryItem(itemType, 1));
     }
+
+
 
     public InventoryItem[] GetInventoryItems()
     {
         return items.ToArray();
     }
-    public void DebugInventory()
-    {
-        foreach (InventoryItem item in items)
-            Debug.Log("We have " + item.amount + " items of type: " + item.itemType);
-    }
-
 
     public void Clear()
     {

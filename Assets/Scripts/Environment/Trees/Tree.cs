@@ -19,7 +19,7 @@ public class Tree : Item, IHitAble, IDamageAble
     [SerializeField] private int TrunkTreeHealth;
 
     [Header("Actions")]
-    public static Action<ItemType> onPickupWood;
+    public static Action<string> onPickupWood;
 
     private Color startColor;
     private float fadeDuration = 6f; // Thời gian mờ dần (6 giây)
@@ -87,7 +87,7 @@ public class Tree : Item, IHitAble, IDamageAble
         woodParticles.Play();
 
         // Gọi sự kiện để thông báo thu thập Wood
-        onPickupWood?.Invoke(itemData.itemType);//InventoryManager
+        onPickupWood?.Invoke(itemData.itemName);//InventoryManager
 
         Invoke("DisableParticles", 1f);
     }

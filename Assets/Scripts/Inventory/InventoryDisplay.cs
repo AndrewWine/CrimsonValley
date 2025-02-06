@@ -1,87 +1,70 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class InventoryDisplay : MonoBehaviour
 {
     [Header("Elements")]
     [SerializeField] private Transform cropContainersParent;
+    [SerializeField] private Transform materialContainerParent;
+    [SerializeField] private Transform toolContainersParent;
     [SerializeField] private UIcropContainer uicropContainer;
-
-
-    // Start is called before the first frame update
-    void Start()
-    {
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 
     public void Configure(Inventory inventory)
     {
         InventoryItem[] items = inventory.GetInventoryItems();
-        for (int i = 0; i < items.Length; i++)
+        foreach (var item in items)
         {
-            UIcropContainer cropContainerInstance = Instantiate(uicropContainer,cropContainersParent);
-            Sprite cropIcon = DataManagers.instance.GetItemSpriteFromItemType(items[i].itemType);
-            cropContainerInstance.Configure(cropIcon,items[i].amount);
+            Transform parent = GetParentByItemType(item.itemType);  // Lấy parent dựa trên ItemType
+            UIcropContainer containerInstance = Instantiate(uicropContainer, parent);
+            Sprite itemIcon = DataManagers.instance.GetItemSpriteFromItemName(item.itemName);
+            containerInstance.Configure(itemIcon, item.amount);
         }
     }
 
     public void UpdateDisplay(Inventory inventory)
     {
         InventoryItem[] items = inventory.GetInventoryItems();
-        for (int i = 0;i < items.Length;i++)
+
+        // Xử lý hiển thị theo từng loại ItemType
+        for (int i = 0; i < items.Length; i++)
         {
+            Transform parent = GetParentByItemType(items[i].itemType);  // Lấy parent dựa trên ItemType
             UIcropContainer containerInstance;
-            if (i < cropContainersParent.childCount)
+
+            // Kiểm tra xem container đã có sẵn chưa, nếu có thì chỉ cần cập nhật
+            if (i < parent.childCount)
             {
-                containerInstance = cropContainersParent.GetChild(i).GetComponent<UIcropContainer>();
-                containerInstance.gameObject.SetActive(true);         
+                containerInstance = parent.GetChild(i).GetComponent<UIcropContainer>();
+                containerInstance.gameObject.SetActive(true);
+            }
+            else
+            {
+                containerInstance = Instantiate(uicropContainer, parent);
             }
 
-            else
-                containerInstance = Instantiate(uicropContainer, cropContainersParent);
-
-            Sprite cropIcon = DataManagers.instance.GetItemSpriteFromItemType(items[i].itemType);
-            containerInstance.Configure(cropIcon, items[i].amount);
-
+            Sprite itemIcon = DataManagers.instance.GetItemSpriteFromItemName(items[i].itemName);
+            containerInstance.Configure(itemIcon, items[i].amount);
         }
-        int remainingContainers = cropContainersParent.childCount - items.Length;
 
-        if (remainingContainers <= 0)
-            return;
-
-        for(int i = 0; i < remainingContainers; i++)
-        {
-            cropContainersParent.GetChild(items.Length + i ).gameObject.SetActive(false);
-        }
-        /*
-   while(cropContainersParent.childCount > 0)
-   {
-       //clear the crop contaienrs parent if there are any ui corp containers
-       Transform container = cropContainersParent.GetChild(0);
-       container.SetParent(null);
-       Destroy(container.gameObject);
-   }
-
-   //create the ui crop containers from scratch again
-
-   Configure(inventory);
-
-
-   for(int i = 0;i < items.Length;i++)
-   {
-       UIcropContainer cropContainerInstance = Instantiate(uicropContainer, cropContainersParent);
-       Sprite cropIcon = DataManagers.instance.GetCropSpriteFromCropType(items[i].croptype)
-;
-       cropContainerInstance.Configure(cropIcon, items[i].amount);
-   }
-   */
-
+      
     }
+
+
+    private Transform GetParentByItemType(ItemType itemType)
+    {
+        // Trả về container cha tương ứng với loại món đồ
+        switch (itemType)
+        {
+            case ItemType.Seed:
+                return cropContainersParent;
+            case ItemType.Material:
+                return materialContainerParent;
+            case ItemType.Tool:
+                return toolContainersParent;
+            default:
+                return cropContainersParent; // Mặc định
+        }
+    }
+
+    
+
 }

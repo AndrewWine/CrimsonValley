@@ -1,0 +1,58 @@
+# Blender 4.0.1 MTL File: 'Door_VAR02.blend'
+# www.blender.org
+
+newmtl Clavos
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd Textures/Clavos_BaseColor.png
+map_Ns Textures/Clavos_Roughness.png
+map_refl Textures/Clavos_Metallic.png
+map_Bump -bm 1.000000 Textures/Clavos_Normal.png
+
+newmtl Cuerpo
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd Textures/Cuerpo_BaseColor.png
+map_Ns Textures/Cuerpo_Roughness.png
+
+newmtl Herraje
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd Textures/Herraje_BaseColor.png
+map_Ns Textures/Herraje_Roughness.png
+map_refl Textures/Herraje_Metallic.png
+map_Bump -bm 1.000000 Textures/Herraje_Normal.png
+
+newmtl Marco
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd Textures/Marco_BaseColor.png
+map_Ns Textures/Marco_Roughness.png
+map_Bump -bm 1.000000 Textures/Marco_Normal.png
+
+newmtl Tablas
+Ka 1.000000 1.000000 1.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd Textures/Tablas_BaseColor.png
+map_Ns Textures/Tablas_Roughness.png
+map_Bump -bm 1.000000 Textures/Tablas_Normal.png

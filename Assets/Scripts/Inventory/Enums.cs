@@ -4,9 +4,7 @@ using UnityEngine;
 
 public enum ItemType
 {
-    Corn,
-    Tomato,
-    Wood
+    Seed, Material, Tool
 }
 
 

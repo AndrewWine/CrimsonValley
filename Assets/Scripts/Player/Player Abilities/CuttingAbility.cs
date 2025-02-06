@@ -33,19 +33,19 @@ public class CuttingAbility : MonoBehaviour
         if (targetTree != null)
         {
             targetTree.TakeDamage(2);
-            Debug.Log("Call Cutting");
+            //Debug.Log("Call Cutting");
             playerAnimator.PlayCuttingAnimation();
         }
         else
         {
-            Debug.Log("No tree detected!");
+            //Debug.Log("No tree detected!");
         }
     }
 
     // Kiểm tra xem có đối tượng nào trong vùng trigger không
     private void OnTriggerStay(Collider other)
     {
-        Debug.Log($"Detected: {other.gameObject.name}"); // Kiểm tra va chạm với đối tượng nào
+        //Debug.Log($"Detected: {other.gameObject.name}"); // Kiểm tra va chạm với đối tượng nào
 
         if (other.CompareTag("Tree"))
         {
@@ -68,7 +68,7 @@ public class CuttingAbility : MonoBehaviour
 
         if (other.CompareTag("Tree"))
         {
-            Debug.Log($"Exited tree: {other.gameObject.name}");
+            //Debug.Log($"Exited tree: {other.gameObject.name}");
             targetTree = null;
         }
     }

@@ -15,7 +15,7 @@ public class CropTile : MonoBehaviour
     private ItemData cropData;
 
     [Header("Actions")]
-    public static Action<ItemType> onCropHarvested;
+    public static Action<string> onCropHarvested;
    
     void Start()
     {
@@ -83,7 +83,7 @@ public class CropTile : MonoBehaviour
         state = TileFieldState.Empty;
         crop.ScaleDown(); //Chỉ thu hoạch khi cây đã lớn đủ
         tileRenderer.gameObject.LeanColor(Color.white, 1).setEase(LeanTweenType.easeOutBack);
-        onCropHarvested?.Invoke(cropData.itemType);//InventoryManager
+        onCropHarvested?.Invoke(cropData.itemName);//InventoryManager
     }
 
     public bool IsReadyToHarvest()
