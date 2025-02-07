@@ -15,6 +15,7 @@ public class UISeedSelect : MonoBehaviour
     {
         // Gọi trực tiếp OnAbleToSowSeed với tên của seed
         //OnAbleToSowSeed("Corn");  // Ví dụ gọi cho Corn
+        //
         //OnAbleToSowSeed("Tomato");  // Ví dụ gọi cho Tomato
     }
 

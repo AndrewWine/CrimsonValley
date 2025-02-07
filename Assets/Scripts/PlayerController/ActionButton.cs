@@ -19,6 +19,8 @@ public class ActionButton : MonoBehaviour
     [Header("Actions")]
     public static Action Hoeing;//HoeAbility
     public static Action Cutting;//HoeAbility
+    public static Action Building;//HoeAbility
+
 
     private void Start()
     {
@@ -56,6 +58,11 @@ public class ActionButton : MonoBehaviour
         {
             Cutting?.Invoke();//CuttingAbility
         }
+        else if (playerToolSelector.activeTool == PlayerToolSelector.Tool.Hammer)
+        {
+            Building?.Invoke();//Building
+        }
+
     }
 
     //Các hàm này sẽ tự động được gọi khi có sự kiện từ CheckCropFieldState
