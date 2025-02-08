@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -15,8 +16,8 @@ public class BuildingSystem : MonoBehaviour
     [Header("Settings")]
     private bool isBuildingMode = false;
     private bool isPositionValid = false;
-    [SerializeField] private bool hasObstacle;
-    private bool isOnGround;
+    [SerializeField] private bool hasObstacle = false;
+    private bool isOnGround = false;
     [Header("Architecture")]
     private GameObject architectureSelected;
     [Header("Architecture Prefab")]
@@ -120,7 +121,7 @@ public class BuildingSystem : MonoBehaviour
         RaycastHit hit;
         if (Physics.Raycast(targetPosition + Vector3.up * 5, Vector3.down, out hit, Mathf.Infinity, groundLayer))
         {
-            architecture.transform.position = new Vector3(hit.point.x, hit.point.y + 1f, hit.point.z);
+            architecture.transform.position = new Vector3(hit.point.x, hit.point.y + 2f, hit.point.z);
         }
     }
 
@@ -175,8 +176,12 @@ public class BuildingSystem : MonoBehaviour
     {
         if (architectureSelected == null || hasObstacle) return;
 
-        // Tạo tòa nhà thực sự
-        Instantiate(architectureSelected, architectureSelected.transform.position, architectureSelected.transform.rotation);
+        // Lấy vị trí và góc quay từ preview
+        Vector3 placePosition = architectureSelected.transform.position;
+        Quaternion placeRotation = architectureSelected.transform.rotation;
+
+        // Tạo building thực tế
+        Instantiate(architectureSelected, placePosition, placeRotation);
 
         // Reset màu về mặc định (trắng)
         ResetBuildingColor();
@@ -185,6 +190,8 @@ public class BuildingSystem : MonoBehaviour
         Destroy(architectureSelected);
         architectureSelected = null;
     }
+
+
 
     private void ResetBuildingColor()
     {

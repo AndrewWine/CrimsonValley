@@ -24,13 +24,18 @@ public class InventoryDisplay : MonoBehaviour
     {
         InventoryItem[] items = inventory.GetInventoryItems();
 
-        // Xử lý hiển thị theo từng loại ItemType
+        // Nếu inventory rỗng, ẩn tất cả UI container
+        if (items.Length == 0)
+        {
+            HideAllItemContainers();
+            return;
+        }
+
         for (int i = 0; i < items.Length; i++)
         {
-            Transform parent = GetParentByItemType(items[i].itemType);  // Lấy parent dựa trên ItemType
+            Transform parent = GetParentByItemType(items[i].itemType);
             UIcropContainer containerInstance;
 
-            // Kiểm tra xem container đã có sẵn chưa, nếu có thì chỉ cần cập nhật
             if (i < parent.childCount)
             {
                 containerInstance = parent.GetChild(i).GetComponent<UIcropContainer>();
@@ -43,10 +48,24 @@ public class InventoryDisplay : MonoBehaviour
 
             Sprite itemIcon = DataManagers.instance.GetItemSpriteFromItemName(items[i].itemName);
             containerInstance.Configure(itemIcon, items[i].amount);
-        }
 
-      
+        }
     }
+
+    // Hàm ẩn tất cả item trong UI inventory
+    private void HideAllItemContainers()
+    {
+        foreach (Transform child in cropContainersParent)
+            child.gameObject.SetActive(false);
+
+        foreach (Transform child in materialContainerParent)
+            child.gameObject.SetActive(false);
+
+        foreach (Transform child in toolContainersParent)
+            child.gameObject.SetActive(false);
+
+    }
+
 
 
     private Transform GetParentByItemType(ItemType itemType)

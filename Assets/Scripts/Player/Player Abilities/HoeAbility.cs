@@ -160,7 +160,7 @@
         lineRenderer.endWidth = 0.05f;
 
         lineRenderer.material = new Material(Shader.Find("Unlit/Color"));
-        lineRenderer.material.color = Color.green;
+        lineRenderer.material.color = Color.yellow;
     }
 
 

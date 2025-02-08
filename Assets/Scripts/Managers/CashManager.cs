@@ -4,8 +4,10 @@ using TMPro;
 
 public class CashManager : MonoBehaviour
 {
-    public static CashManager instance;
 
+    public static CashManager instance;
+    [Header("Elements")]
+    [SerializeField] GameObject coinContainer;
     [Header("Settings")]
     [SerializeField] private int coins;
 
@@ -42,10 +44,7 @@ public class CashManager : MonoBehaviour
 
     private void UpdateCoinsContainers()
     {
-        GameObject[] coinContainers = GameObject.FindGameObjectsWithTag("CoinsAmount");
-
-        foreach (GameObject coinContainer in coinContainers)
-            coinContainer.GetComponent<TextMeshProUGUI>().text = coins.ToString();
+        coinContainer.GetComponentInChildren<TextMeshProUGUI>().text = coins.ToString();
     }
 
     private void LoadData()

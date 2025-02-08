@@ -40,7 +40,15 @@ public class InventoryManager : MonoBehaviour
     {
         inventory.Clear();
         inventoryDisplay.UpdateDisplay(inventory);
+
+        InventoryItem[] itemsAfterClear = inventory.GetInventoryItems();
+
         SaveInventory();
+    }
+
+    public InventoryDisplay GetInventoryDisplay()
+    {
+        return inventoryDisplay;
     }
 
     private void LoadInventory()
