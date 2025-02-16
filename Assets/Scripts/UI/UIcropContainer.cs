@@ -20,4 +20,10 @@ public class UIcropContainer : MonoBehaviour
     {
         amountText.text = amount.ToString();
     }
+
+    public Sprite GetIcon()
+    {
+        return iconImage.sprite;
+    }
+
 }

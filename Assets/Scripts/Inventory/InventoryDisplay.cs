@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using Unity.VisualScripting;
+using UnityEngine;
+using static UnityEditor.Progress;
 
 public class InventoryDisplay : MonoBehaviour
 {
@@ -15,7 +17,7 @@ public class InventoryDisplay : MonoBehaviour
         {
             Transform parent = GetParentByItemType(item.itemType);  // Lấy parent dựa trên ItemType
             UIcropContainer containerInstance = Instantiate(uicropContainer, parent);
-            Sprite itemIcon = DataManagers.instance.GetItemSpriteFromItemName(item.itemName);
+            Sprite itemIcon = DataManagers.instance.GetItemSpriteFromName(item.itemName);
             containerInstance.Configure(itemIcon, item.amount);
         }
     }
@@ -24,7 +26,6 @@ public class InventoryDisplay : MonoBehaviour
     {
         InventoryItem[] items = inventory.GetInventoryItems();
 
-        // Nếu inventory rỗng, ẩn tất cả UI container
         if (items.Length == 0)
         {
             HideAllItemContainers();
@@ -46,11 +47,14 @@ public class InventoryDisplay : MonoBehaviour
                 containerInstance = Instantiate(uicropContainer, parent);
             }
 
-            Sprite itemIcon = DataManagers.instance.GetItemSpriteFromItemName(items[i].itemName);
+            Sprite itemIcon = DataManagers.instance.GetItemSpriteFromName(items[i].itemName); 
             containerInstance.Configure(itemIcon, items[i].amount);
-
         }
+
+        RemoveItemIconFromInventory(inventory);
     }
+
+
 
     // Hàm ẩn tất cả item trong UI inventory
     private void HideAllItemContainers()
@@ -66,6 +70,29 @@ public class InventoryDisplay : MonoBehaviour
 
     }
 
+    private void RemoveItemIconFromInventory(Inventory inventory)
+    {
+        InventoryItem[] items = inventory.GetInventoryItems();
+
+        // Kiểm tra và xóa các item có số lượng = 0
+        foreach (Transform parent in new Transform[] { cropContainersParent, materialContainerParent, toolContainersParent })
+        {
+            for (int i = 0; i < parent.childCount; i++)
+            {
+                UIcropContainer container = parent.GetChild(i).GetComponent<UIcropContainer>();
+
+                if (container == null) continue;
+
+                string itemName = DataManagers.instance.GetItemNameFromSprite(container.GetIcon());
+                InventoryItem item = System.Array.Find(items, x => x.itemName == itemName);
+
+                if (item == null || item.amount <= 0)
+                {
+                    Destroy(container.gameObject);
+                }
+            }
+        }
+    }
 
 
     private Transform GetParentByItemType(ItemType itemType)

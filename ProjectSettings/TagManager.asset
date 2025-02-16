@@ -12,6 +12,7 @@ TagManager:
   - Ground
   - Croptile
   - Tree
+  - Cage
   layers:
   - Default
   - TransparentFX

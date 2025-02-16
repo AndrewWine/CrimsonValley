@@ -17,3 +17,10 @@ public enum TileFieldState
     Ripened
 }
 
+public enum CageState
+{
+    Empty,
+    Hungry,
+    TakeProduce
+}
+
