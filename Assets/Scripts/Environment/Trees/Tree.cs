@@ -130,9 +130,21 @@ public class Tree : Item, IHitAble, IDamageAble
     {
         if (isTopTree)
         {
+            ShakeTree(); // Gọi rung cây
             TopTreeHealth -= target;
         }
         else
             TrunkTreeHealth -= target;
+
+       
+
     }
+
+    private void ShakeTree()
+    {
+        // Rung xoay quanh trục X và Z
+        LeanTween.rotate(gameObject, new Vector3(0.01f, 0f, 0.01f), 0.1f).setLoopPingPong(1);
+        // Xoay ±5 độ ở trục X và ±0.1 độ ở trục Z trong 0.2 giây, với 1 lần lặp lại
+    }
+
 }

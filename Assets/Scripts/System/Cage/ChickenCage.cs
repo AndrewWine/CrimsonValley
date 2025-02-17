@@ -1,6 +1,7 @@
-﻿public class ChickenCage : Cage
+﻿using UnityEngine;
+
+public class ChickenCage : Cage
 {
-   
     protected override void OnEnable()
     {
         feedingTimer = 200;  // Gán giá trị mặc định cho gà

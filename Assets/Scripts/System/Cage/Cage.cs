@@ -4,13 +4,10 @@ using UnityEngine.UI;
 
 public class Cage : MonoBehaviour
 {
-    [Header("Elements UI")]
-    [SerializeField] protected GameObject product;
-
-
     [Header("Elements")]
     [SerializeField] protected Inventory inventory;
     [SerializeField] public CageState state;
+
 
     [Header("Settings")]
     [SerializeField] protected int nutrition;
@@ -23,8 +20,6 @@ public class Cage : MonoBehaviour
     [SerializeField] protected int quantity;
     [SerializeField] protected string nameOfMaterial;
 
-    
-
     protected virtual void OnEnable() 
     { 
         InitializeSetting();
@@ -36,7 +31,6 @@ public class Cage : MonoBehaviour
     {
         CheckUICageStatus.FeedButton -= ReduceTimeProduce;
         CheckUICageStatus.TakeProduceButton -= ResetTakeProduceTimer;
-
     }
 
     private void InitializeSetting()
@@ -59,6 +53,7 @@ public class Cage : MonoBehaviour
     {
         state = CageState.Hungry;
     }
+
     private void timeCounter()
     {
         feedingTimer -= Time.deltaTime;
@@ -69,19 +64,24 @@ public class Cage : MonoBehaviour
 
     public virtual void ReduceTimeProduce(int nutrition)
     {
-        timeToHarvestProductPassed -= nutrition;
-        feedingTimer = DigestionTime;
-
+        if (nutrition > 0)
+        {
+            // Giảm thời gian thu hoạch
+            timeToHarvestProductPassed -= nutrition;
+            feedingTimer = DigestionTime;
+          
+        }
+        else
+        {
+            Debug.LogWarning("Invalid nutrition value.");
+        }
     }
 
-    protected virtual void ResetFeedTimer()
-    {
-
-    }
-
+    // Phương thức dùng chung cho tất cả các lớp con
     protected virtual void ResetTakeProduceTimer()
     {
         timeToHarvestProductPassed = harvestTimer;
+       
 
     }
 }

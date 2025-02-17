@@ -163,12 +163,12 @@ PrefabInstance:
     - target: {fileID: 3257192793423978220, guid: 98a44f2fcb59e024aa10ddf48429cf7f,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 18.34
+      value: 7.6
       objectReference: {fileID: 0}
     - target: {fileID: 3257192793423978220, guid: 98a44f2fcb59e024aa10ddf48429cf7f,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.29
+      value: 0.4
       objectReference: {fileID: 0}
     - target: {fileID: 3257192793423978220, guid: 98a44f2fcb59e024aa10ddf48429cf7f,
         type: 3}
@@ -217,8 +217,13 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5487725644174595757, guid: 98a44f2fcb59e024aa10ddf48429cf7f,
         type: 3}
+      propertyPath: CollisionModule.m_Bounce.scalar
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5487725644174595757, guid: 98a44f2fcb59e024aa10ddf48429cf7f,
+        type: 3}
       propertyPath: CollisionModule.m_Dampen.scalar
-      value: 0
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 6533552550779421632, guid: 98a44f2fcb59e024aa10ddf48429cf7f,
         type: 3}

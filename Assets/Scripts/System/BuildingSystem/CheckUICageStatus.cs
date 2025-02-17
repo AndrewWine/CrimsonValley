@@ -7,7 +7,8 @@ public class CheckUICageStatus : MonoBehaviour
     [Header("Elements UI")]
     [SerializeField] private Button feedButton;
     [SerializeField] private Button harvestButton;
-
+    [SerializeField] private ParticleSystem HarvestProduce;
+    [SerializeField] private ParticleSystem FeedPoultry;
     [Header("Actions")]
     public static Action<int> FeedButton;
     public static Action TakeProduceButton;
@@ -100,20 +101,27 @@ public class CheckUICageStatus : MonoBehaviour
     {
         if (currentCage != null)
         {
-            FeedButton?.Invoke(10);
-            currentCage.ReduceTimeProduce(10);
-            currentCage.state = CageState.Empty;  // Đặt lại trạng thái sau khi thu hoạch
-            UpdateCageUI(currentCage.state);
+            FeedButton?.Invoke(10); // Gọi action FeedButton cho Cage hiện tại
+            currentCage.ReduceTimeProduce(10); // Gọi phương thức của currentCage
+
+            // Chỉ thay đổi trạng thái của currentCage, không ảnh hưởng đến các Cage khác
+            currentCage.state = CageState.Empty;
+            UpdateCageUI(currentCage.state); // Cập nhật UI cho currentCage\
+            FeedPoultry.Play();
         }
     }
 
-    public  void TakeProduce()
+    public void TakeProduce()
     {
         if (currentCage != null && currentCage.state == CageState.TakeProduce)
         {
+            TakeProduceButton?.Invoke(); // Gọi action TakeProduceButton
+
             currentCage.state = CageState.Empty;  // Đặt lại trạng thái sau khi thu hoạch
-            ResetCageUI();
-            TakeProduceButton?.Invoke();
+            UpdateCageUI(currentCage.state); // Cập nhật UI cho currentCage
+            //ResetCageUI();  // Đặt lại UI cho cage hiện tại
+            HarvestProduce.Play();
         }
     }
+
 }

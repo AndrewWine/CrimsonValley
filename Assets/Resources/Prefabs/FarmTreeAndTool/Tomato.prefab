@@ -168,12 +168,12 @@ PrefabInstance:
     - target: {fileID: 3257192793423978220, guid: 98a44f2fcb59e024aa10ddf48429cf7f,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.7
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 3257192793423978220, guid: 98a44f2fcb59e024aa10ddf48429cf7f,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.01
+      value: 0.07
       objectReference: {fileID: 0}
     - target: {fileID: 3257192793423978220, guid: 98a44f2fcb59e024aa10ddf48429cf7f,
         type: 3}
@@ -293,12 +293,12 @@ PrefabInstance:
     - target: {fileID: 5487725644174595757, guid: 98a44f2fcb59e024aa10ddf48429cf7f,
         type: 3}
       propertyPath: EmissionModule.m_Bursts.Array.data[0].cycleCount
-      value: 4
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 5487725644174595757, guid: 98a44f2fcb59e024aa10ddf48429cf7f,
         type: 3}
       propertyPath: EmissionModule.m_Bursts.Array.data[0].countCurve.scalar
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 6533552550779421632, guid: 98a44f2fcb59e024aa10ddf48429cf7f,
         type: 3}

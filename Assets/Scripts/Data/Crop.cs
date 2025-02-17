@@ -17,7 +17,7 @@ public class Crop : Item
 
     public void ScaleUp()
     {
-        LeanTween.scale(cropRenderer.gameObject, new Vector3(10f, 10f, 10f), TimeToGrowUp)
+        LeanTween.scale(cropRenderer.gameObject, cropRenderer.transform.localScale * 10f, TimeToGrowUp)
             .setEase(LeanTweenType.easeOutBack)
             .setOnComplete(() =>
             {
@@ -35,14 +35,7 @@ public class Crop : Item
     {
         if (!isFullyGrown) return; // Nếu chưa lớn đủ, không thu hoạch
 
-        LeanTween.scale(cropRenderer.gameObject, new Vector3(0.1f, 0.1f, 0.1f), TimeToGrowDown)
-            .setEase(LeanTweenType.easeOutBack)
-            .setOnComplete(() =>
-            {
-                arealdyHarvested?.Invoke(); // Thông báo đã thu hoạch
-                Destroy(gameObject); // Xóa cây sau khi hoàn thành
-            });
-
+        Destroy(gameObject); // Xóa cây sau khi hoàn thành
         Debug.Log("Da scaledown");
 
         // Kích hoạt hiệu ứng hạt sau khi thu hoạch

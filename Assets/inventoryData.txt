@@ -1,3 +1,14 @@
 {
-    "items": []
+    "items": [
+        {
+            "itemName": "RawRice",
+            "amount": 1,
+            "itemType": 1
+        },
+        {
+            "itemName": "Pumpkin",
+            "amount": 1,
+            "itemType": 1
+        }
+    ]
 }

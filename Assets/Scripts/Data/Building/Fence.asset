@@ -16,7 +16,7 @@ MonoBehaviour:
   buildingPrefab: {fileID: 6794892140497869820, guid: f1233b91ec8c6f343b0e720955f186f8,
     type: 3}
   icon: {fileID: 21300000, guid: 2fb4cecac02a4134fb6847812764884e, type: 3}
-  requiredItemsIcon: {fileID: 21300000, guid: 2fb4cecac02a4134fb6847812764884e, type: 3}
+  requiredItemsIcon: {fileID: 21300000, guid: 3fe6d0db39d97d34a837fd99377da1a2, type: 3}
   requiredItems:
   - Wood
   requiredAmounts: 04000000

@@ -12,8 +12,6 @@ public class BuildingSystem : MonoBehaviour
     private PlayerToolSelector playerToolSelector;
     [SerializeField] private GameObject BuildSystemUI;
     [SerializeField] private InventoryManager inventoryManager;
-    [SerializeField] private Transform buildingButtonContainer; // Vùng chứa button
-    [SerializeField] private Button buildingButtonPrefab; // Prefab button
 
     [Header("Settings")]
     private bool isBuildingMode = false;
@@ -23,7 +21,6 @@ public class BuildingSystem : MonoBehaviour
     private bool notEnoughItem = false;
 
     [Header("Architecture Prefabs")]
-    [SerializeField] private BuildingData[] architectureData;
     private GameObject architectureSelected;
     private BuildingData currentBuildingRequirement;
 
@@ -32,9 +29,12 @@ public class BuildingSystem : MonoBehaviour
     [SerializeField] private Transform requirementContainer; // Chứa danh sách nguyên liệu
     [SerializeField] private GameObject requiredItemPrefab; // Prefab hiển thị nguyên liệu
 
+    [Header("Actions")]
+    public static Action generateButton;
+    
     private void Start()
     {
-     
+        UISelectButton.buildButtonPressed += SelectArchitecture;
         architectureSelected = null;
         playerToolSelector = GetComponent<PlayerToolSelector>();
         playerToolSelector.onToolSelected += ToolSelectedCallBack;
@@ -47,6 +47,8 @@ public class BuildingSystem : MonoBehaviour
     {
         playerToolSelector.onToolSelected -= ToolSelectedCallBack;
         ActionButton.Building -= PlaceBuilding;
+        UISelectButton.buildButtonPressed -= SelectArchitecture;
+
     }
 
     private void Update()
@@ -64,53 +66,11 @@ public class BuildingSystem : MonoBehaviour
 
         if (selectedTool == PlayerToolSelector.Tool.Hammer)
         {
-            GenerateBuildingButtons();
+            generateButton?.Invoke();//UISelectButton
         }
     }
 
-    private void GenerateBuildingButtons()
-    {
-        // Xóa button cũ
-        foreach (Transform child in buildingButtonContainer)
-        {
-            Destroy(child.gameObject);
-        }
-
-        foreach (BuildingData building in architectureData)
-        {
-            // Tạo button mới
-            Button newButton = Instantiate(buildingButtonPrefab, buildingButtonContainer);
-            newButton.name = building.buildingName;
-
-            // Kiểm tra Image component
-            Image buttonImage = newButton.GetComponent<Image>();
-            if (buttonImage == null)
-            {
-                Debug.LogError($"❌ Không tìm thấy Image component trên button {newButton.name}");
-                continue;
-            }
-
-            // Kiểm tra building.icon có null không
-            if (building.icon == null)
-            {
-                Debug.LogError($"❌ Building {building.buildingName} chưa có icon!");
-                continue;
-            }
-
-            // Gán icon và kiểm tra lại sprite
-            buttonImage.sprite = building.icon;
-            buttonImage.SetNativeSize();
-
-            // Bật/tắt Image để refresh
-            buttonImage.enabled = false;
-            buttonImage.enabled = true;
-
-            Debug.Log($"✅ Cập nhật icon cho {building.buildingName}: {building.icon.name} ({building.icon})");
-
-            // Thêm sự kiện click
-            newButton.onClick.AddListener(() => SelectArchitecture(building));
-        }
-    }
+    
 
 
     public void SelectArchitecture(BuildingData buildingData)
@@ -209,7 +169,7 @@ public class BuildingSystem : MonoBehaviour
     {
         if (architecture == null) return;
 
-        float distanceFromPlayer = 5f;
+        float distanceFromPlayer = 7f;
         Vector3 targetPosition = checkTransform.position + (checkTransform.forward * distanceFromPlayer);
 
         if (Physics.Raycast(targetPosition + Vector3.up * 5, Vector3.down, out RaycastHit hit, Mathf.Infinity, groundLayer))
@@ -225,7 +185,15 @@ public class BuildingSystem : MonoBehaviour
         isOnGround = false;
         hasObstacle = false;
 
-        Bounds bounds = architectureSelected.GetComponentInChildren<Renderer>().bounds;
+        // Lấy tất cả MeshRenderer của công trình để đổi màu
+        MeshRenderer[] renderers = architectureSelected.GetComponentsInChildren<MeshRenderer>();
+        if (renderers.Length == 0) return; // Nếu không có renderer, thoát sớm
+
+        // Mặc định đặt màu xanh lá cây (có thể thay đổi nếu phát hiện vật cản)
+        Color targetColor = Color.green;
+
+        // Lấy danh sách các collider xung quanh công trình
+        Bounds bounds = renderers[0].bounds;
         Collider[] colliders = Physics.OverlapBox(bounds.center, bounds.extents, Quaternion.identity);
 
         foreach (Collider col in colliders)
@@ -236,22 +204,29 @@ public class BuildingSystem : MonoBehaviour
             if (col.CompareTag("Ground"))
             {
                 isOnGround = true;
+                Debug.Log("isground");
             }
             else
             {
                 hasObstacle = true;
+                Debug.Log("hasObstacle");
+
+                // Nếu phát hiện vật thể cản trở -> đổi màu sang đỏ
+                targetColor = Color.red;
             }
         }
 
-        isPositionValid = isOnGround && !hasObstacle;
-        Color targetColor = isPositionValid ? Color.green : Color.red;
-
-        MeshRenderer[] renderers = architectureSelected.GetComponentsInChildren<MeshRenderer>();
+        // Đổi màu toàn bộ kiến trúc dựa trên kết quả kiểm tra
         foreach (MeshRenderer renderer in renderers)
         {
-            renderer.material.color = targetColor;
+            foreach (Material mat in renderer.materials)
+            {
+                mat.color = targetColor;
+            }
         }
     }
+
+
 
     private void PlaceBuilding()
     {
