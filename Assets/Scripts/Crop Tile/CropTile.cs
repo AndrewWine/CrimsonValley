@@ -13,16 +13,27 @@ public class CropTile : MonoBehaviour
     [SerializeField] private MeshRenderer tileRenderer;
     private Crop crop;
     private ItemData cropData;
-
+    private int dropAmount ;
     [Header("Actions")]
-    public static Action<string> onCropHarvested;
-   
+    public static Action<string, int> onCropHarvested;
+
+    [Header("Buff and Debuff CrimsonMoon event")]
+    private int DebuffAmount;// cái này sau này dùng cho sự kiện CrimsonMoon nếu kịp làm cốt truyện
+    private int BuffAmount ;// cái này sau này dùng cho sự kiện CrimsonMoon nếu kịp làm cốt truyện
+
     void Start()
     {
         cropParent = GetComponent<Transform>();
         state = TileFieldState.Empty;
+        InitializeSettings();
     }
 
+    private void InitializeSettings()
+    {
+        dropAmount = UnityEngine.Random.Range(3, 10);
+        DebuffAmount = UnityEngine.Random.Range(1, 3);
+        BuffAmount = UnityEngine.Random.Range(1, 3);
+    }
 
     private void OnDisable()
     {
@@ -79,11 +90,11 @@ public class CropTile : MonoBehaviour
         {
             return; // Ngăn thu hoạch khi cây chưa phát triển đủ
         }
-
+        InitializeSettings();
         state = TileFieldState.Empty;
         crop.ScaleDown(); //Chỉ thu hoạch khi cây đã lớn đủ
         tileRenderer.gameObject.LeanColor(Color.white, 1).setEase(LeanTweenType.easeOutBack);
-        onCropHarvested?.Invoke(cropData.itemName);//InventoryManager
+        onCropHarvested?.Invoke(cropData.itemName, dropAmount);//InventoryManager
     }
 
     public bool IsReadyToHarvest()

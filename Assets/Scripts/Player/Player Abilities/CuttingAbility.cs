@@ -1,51 +1,49 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
+using UnityEngine.Playables;
 
 public class CuttingAbility : MonoBehaviour
 {
     [Header(" Elements ")]
     [SerializeField] public Transform checkGameObject;
-    private PlayerAnimator playerAnimator;
-
     [Header(" Settings ")]
     private bool canCut;
     private Tree targetTree;
-
+    private PlayerBlackBoard blackBoard;
 
     [Header("Actions")]
-    public static System.Action<Transform, int> Cutting;
+    public static System.Action<Transform, float> Cutting;
 
     void Start()
     {
-        playerAnimator = GetComponent<PlayerAnimator>();
-
-        ActionButton.Cutting += OnCuttingButtonPressed;
+        blackBoard = GetComponentInParent<PlayerBlackBoard>();
+        CutState.notifyCutting += OnCuttingButtonPressed;
     }
 
     private void OnDestroy()
     {
-        ActionButton.Cutting -= OnCuttingButtonPressed;
+        CutState.notifyCutting -= OnCuttingButtonPressed;
     }
 
     public void OnCuttingButtonPressed()
     {
         if (targetTree != null)
         {
-            targetTree.TakeDamage(2);
-            //Debug.Log("Call Cutting");
-            playerAnimator.PlayCuttingAnimation();
+            PlayerStatusManager.Instance.UseStamina(1); // Mỗi lần dùng công cụ trừ 10 Stamina
+            targetTree.TakeDamage(blackBoard.Axedamage);
         }
         else
         {
-            //Debug.Log("No tree detected!");
+            Debug.Log("No tree detected!");
         }
     }
 
     // Kiểm tra xem có đối tượng nào trong vùng trigger không
     private void OnTriggerStay(Collider other)
     {
-        //Debug.Log($"Detected: {other.gameObject.name}"); // Kiểm tra va chạm với đối tượng nào
+        Debug.Log($"Detected: {other.gameObject.name}"); // Kiểm tra va chạm với đối tượng nào
 
         if (other.CompareTag("Tree"))
         {

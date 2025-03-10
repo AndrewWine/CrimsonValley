@@ -1,13 +1,16 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public enum ItemType
 {
-    Seed, Material, Tool
+    Seed, Material, Tool, Produce
 }
 
-
+public enum EquipType // Make enum public
+{
+    Axe, Pickaxe
+}
 
 public enum TileFieldState 
 { 

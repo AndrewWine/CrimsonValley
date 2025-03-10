@@ -55,6 +55,7 @@ public class InventoryRect : MonoBehaviour
 
     public void CloseInventory()
     {
+        TooltipManager.Instance.HideTooltip();
         StartCoroutine(MoveInventoryOut());
     }
 

@@ -15,7 +15,7 @@ MonoBehaviour:
   buildingName: ChickenCoop
   buildingPrefab: {fileID: 6557026553619783977, guid: 839d04b551b3eba45a856d1c97ebe47c,
     type: 3}
-  icon: {fileID: 21300000, guid: 6ae697a26d3c5c941aad491376e08a9c, type: 3}
+  icon: {fileID: 21300000, guid: 6d47896950d43314687998a9dd0d2896, type: 3}
   requiredItemsIcon: {fileID: 21300000, guid: 3fe6d0db39d97d34a837fd99377da1a2, type: 3}
   requiredItems:
   - Wood

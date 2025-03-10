@@ -29,6 +29,20 @@ public class DataManagers : MonoBehaviour
         return null;
     }
 
+
+    public ItemData GetItemPriceByName(string itemName)
+    {
+        foreach (var data in itemDataArray)
+        {
+            if (data.itemName.Equals(itemName, StringComparison.OrdinalIgnoreCase))
+                return data;
+        }
+        Debug.LogError(" Không tìm thấy ItemData: " + itemName);
+        return null;
+    }
+
+
+
     public BuildingData GetBuildingDataByName(string buildingName)
     {
         foreach (var data in buildingDataArray)
@@ -45,6 +59,7 @@ public class DataManagers : MonoBehaviour
         // Tìm trong ItemData trước
         ItemData itemData = GetItemDataByName(name);
         if (itemData != null) return itemData.icon;
+        Debug.LogError($"Không tìm thấy sprite cho: {name}");
 
         // Nếu không tìm thấy, tìm trong BuildingData
         BuildingData buildingData = GetBuildingDataByName(name);
@@ -61,7 +76,7 @@ public class DataManagers : MonoBehaviour
             if (data.itemName.Equals(itemName, StringComparison.OrdinalIgnoreCase))
                 return data.price;
         }
-        Debug.LogError("❌ Không tìm thấy giá của: " + itemName);
+        Debug.LogError("Không tìm thấy giá của: " + itemName);
         return 0;
     }
 
@@ -79,5 +94,53 @@ public class DataManagers : MonoBehaviour
         }
         Debug.LogError(" Không tìm thấy tên item từ sprite.");
         return null;
+    }
+
+    public ItemType GetItemTypeFromItemName(string itemName)
+    {
+        foreach (var data in itemDataArray)
+        {
+            if (data.itemName.Equals(itemName, StringComparison.OrdinalIgnoreCase))
+            {
+                return data.itemType;  // Trả về loại item (ItemType)
+            }
+        }
+        Debug.LogError("Không tìm thấy ItemType cho item: " + itemName);
+        return ItemType.Produce;  // Hoặc trả về giá trị mặc định (tùy theo enum của bạn)
+    }
+
+    public EquipType GetEquipTypeFromItemName(string itemName)
+    {
+        foreach (var data in itemDataArray)
+        {
+            if (data.itemName.Equals(itemName, StringComparison.OrdinalIgnoreCase))
+            {
+                return data.equipType;  // Trả về loại item (EquipType)
+            }
+        }
+        Debug.LogError("Không tìm thấy ItemType cho item: " + itemName);
+        return EquipType.Pickaxe;  // Hoặc trả về giá trị mặc định (tùy theo enum của bạn)
+    }
+
+    public int GetItemDamageFromItemName(string itemName)
+    {
+        foreach (var data in itemDataArray)
+        {
+            if (data.itemName.Equals(itemName, StringComparison.OrdinalIgnoreCase))
+                return data.damage;
+        }
+        Debug.LogError("Không tìm thấy damage của: " + itemName);
+        return 0;
+    }
+
+    public int GetItemDurabilityFromItemName(string itemName)
+    {
+        foreach (var data in itemDataArray)
+        {
+            if (data.itemName.Equals(itemName, StringComparison.OrdinalIgnoreCase))
+                return data.durability;
+        }
+        Debug.LogError("Không tìm thấy durability của: " + itemName);
+        return 0;
     }
 }

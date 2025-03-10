@@ -1,34 +1,70 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using UnityEngine.UI;
+
 
 [RequireComponent(typeof(InventoryDisplay))]
 public class InventoryManager : MonoBehaviour
 {
-    [SerializeField]private Inventory inventory;
+    public static InventoryManager Instance { get; private set; } // Singleton Instance
+
+    [SerializeField] private Inventory inventory;
     private InventoryDisplay inventoryDisplay;
     private string dataPath;
 
-    private void Start()
+    private void Awake()
     {
+        CropTile.onCropHarvested += PickUpItemCallBack;
+
+        // Thiết lập Singleton: Nếu đã có Instance rồi thì hủy object này.
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
+
         dataPath = Application.dataPath + "/inventoryData.txt";
         LoadInventory();
         ConfigureInventoryDisplay();
-        CropTile.onCropHarvested += PickUpItemCallBack;
-        Tree.onPickupWood += PickUpItemCallBack;
     }
 
-    private void OnDestroy()
+    private void OnEnable()
     {
+        // Đăng ký sự kiện khi Object được bật
+
+        if (Tree.onPickupWood != null)
+            Tree.onPickupWood += PickUpItemCallBack;
+
+        if (Cage.GiveItemToPlayer != null)
+            Cage.GiveItemToPlayer += PickUpItemCallBack;
+    }
+
+    private void OnDisable()
+    {
+        // Hủy đăng ký sự kiện khi Object bị tắt
         CropTile.onCropHarvested -= PickUpItemCallBack;
         Tree.onPickupWood -= PickUpItemCallBack;
+        Cage.GiveItemToPlayer -= PickUpItemCallBack;
     }
 
-    private void PickUpItemCallBack(string itemName)
+    public void PickUpItemCallBack(string itemName, int amount)
     {
-        inventory.AddItemByName(itemName);
-        inventoryDisplay.UpdateDisplay(inventory);
-        SaveInventory();
+        Debug.Log("Buy on ItemCallBack");
+        if (inventory != null && inventoryDisplay != null)
+        {
+            inventory.AddItemByName(itemName, amount);
+            inventoryDisplay.UpdateDisplay(inventory);
+            SaveInventory();
+            Debug.Log($"Đã thêm item {itemName} số lượng {amount}");
+        }
+        else
+        {
+            Debug.LogError("inventory hoặc inventoryDisplay là null!");
+        }
     }
 
     private void ConfigureInventoryDisplay()
@@ -37,15 +73,10 @@ public class InventoryManager : MonoBehaviour
         inventoryDisplay.Configure(inventory);
     }
 
-    
-
     public void ClearInventory()
     {
         inventory.Clear();
         inventoryDisplay.UpdateDisplay(inventory);
-
-        InventoryItem[] itemsAfterClear = inventory.GetInventoryItems();
-
         SaveInventory();
     }
 
@@ -59,10 +90,9 @@ public class InventoryManager : MonoBehaviour
         if (File.Exists(dataPath))
         {
             string data = File.ReadAllText(dataPath);
-            Debug.Log(" Dữ liệu Inventory load từ file:\n" + data); // Log JSON để kiểm tra
+            Debug.Log("Dữ liệu Inventory load từ file:\n" + data);
 
             inventory = JsonUtility.FromJson<Inventory>(data);
-
             if (inventory == null)
             {
                 Debug.LogWarning("Dữ liệu Inventory bị lỗi! Tạo Inventory mới.");
@@ -76,8 +106,6 @@ public class InventoryManager : MonoBehaviour
             inventory = new Inventory();
         }
 
-        // In ra danh sách item ngay sau khi load
-        Debug.Log(" Inventory sau khi load:");
         InventoryItem[] items = inventory.GetInventoryItems();
         foreach (var item in items)
         {
@@ -85,40 +113,35 @@ public class InventoryManager : MonoBehaviour
         }
     }
 
-
     public bool FindItemByName(string itemName, int requiredAmount)
     {
         if (inventory == null)
         {
-            Debug.LogError("❌ Inventory chưa được khởi tạo!");
+            Debug.LogError("Inventory chưa được khởi tạo!");
             return false;
         }
 
         InventoryItem item = inventory.FindItem(itemName);
-
         if (item != null)
         {
-            Debug.Log($"🔍 Tìm thấy: {item.itemName} - Số lượng: {item.amount} (Cần: {requiredAmount})");
+            Debug.Log($"Tìm thấy: {item.itemName} - Số lượng: {item.amount} (Cần: {requiredAmount})");
 
-            // Kiểm tra xem có đủ số lượng không
             if (item.amount >= requiredAmount)
             {
-                return true; // ✅ Đủ nguyên liệu
+                return true;
             }
             else
             {
-                Debug.LogWarning($"⚠️ Không đủ {itemName}. Hiện có: {item.amount}, Cần: {requiredAmount}");
-                return false; // ❌ Thiếu nguyên liệu
+                Debug.LogWarning($" Không đủ {itemName}. Hiện có: {item.amount}, Cần: {requiredAmount}");
+                return false;
             }
         }
         else
         {
-            Debug.LogWarning($"❌ Không tìm thấy {itemName} trong Inventory.");
+            Debug.LogWarning($"Không tìm thấy {itemName} trong Inventory.");
             return false;
         }
     }
-
-
 
     private void SaveInventory()
     {
@@ -130,4 +153,8 @@ public class InventoryManager : MonoBehaviour
     {
         return inventory;
     }
+
+   
+
+
 }

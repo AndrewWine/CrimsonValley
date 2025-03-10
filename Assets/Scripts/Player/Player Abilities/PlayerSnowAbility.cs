@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class PlayerSnowAbility : MonoBehaviour
 {
     [Header(" Elements ")]
-    private PlayerAnimator playerAnimator;
     private PlayerToolSelector playerToolSelector;
     [SerializeField] private GameObject SeedUI;
-    private ItemData selectedCropData;
+    private PlayerBlackBoard blackBoard;
 
     [Header(" Actions ")]
     public static Action<ItemData> SownNotify;
@@ -18,27 +18,27 @@ public class PlayerSnowAbility : MonoBehaviour
 
     void Start()
     {
-        playerAnimator = GetComponent<PlayerAnimator>();
-        playerToolSelector = GetComponent<PlayerToolSelector>();
+        playerToolSelector = transform.parent.GetComponentInChildren<PlayerToolSelector>();
+        blackBoard = GetComponentInParent<PlayerBlackBoard>();
         playerToolSelector.onToolSelected += ToolSelectedCallBack;
         SeedUI.SetActive(false);
         CheckCropFieldState.UnlockCropField += UnlockCropFieldHandler;
         UISelectButton.seedButtonPressed += SelectSeeds;
     }
 
-    private void OnDestroy()
+    private void OnDisable()
     {
         playerToolSelector.onToolSelected -= ToolSelectedCallBack;
         CheckCropFieldState.UnlockCropField -= UnlockCropFieldHandler;
         UISelectButton.seedButtonPressed -= SelectSeeds;
 
     }
+  
 
     private void ToolSelectedCallBack(PlayerToolSelector.Tool selectedTool)
     {
         if (!playerToolSelector.CanSow())
         {
-            playerAnimator.StopSowAnimation();
             SeedUI.SetActive(false);
         }
         else
@@ -52,40 +52,11 @@ public class PlayerSnowAbility : MonoBehaviour
     {
         unlockCropField = unlock;
     }
-
-
-
     private void SelectSeeds(ItemData seed)
     {
-        selectedCropData = seed;
+        blackBoard.seed = seed;
         Debug.Log($" Chọn hạt giống: {seed.itemName}");
     }
 
-    public void OnSowButtonPressed()
-    {
-        if (selectedCropData == null)
-        {
-            Debug.LogError(" Chưa chọn hạt giống!");
-            return;
-        }
 
-        CropField currentCropField = FindObjectOfType<CheckCropFieldState>()?.GetCurrentCropField();
-
-        if (currentCropField == null)
-        {
-            Debug.LogError(" Không tìm thấy ô đất để gieo trồng!");
-            return;
-        }
-
-        if (currentCropField.state != TileFieldState.Empty)
-        {
-            Debug.LogError(" Ô đất không trống!");
-            return;
-        }
-
-        Debug.Log($"🌱 Gieo hạt {selectedCropData.itemName} tại {currentCropField.name}");
-        currentCropField.Sow(selectedCropData);
-
-        playerAnimator.PlaySowAnimation();
-    }
 }

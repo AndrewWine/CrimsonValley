@@ -29,13 +29,16 @@ public class CropField : MonoBehaviour
         StoreTiles();
         HarvestAbillity.Harvesting += Harvest;
         Crop.realdyToHarvest += NotifyRipened;
-    }
 
+        // Lắng nghe sự kiện thu hoạch từ AnimationTriggerCrop
+        AnimationTriggerCrop.onHarvestTriggered += OnHarvestTriggered;
+    }
 
     private void OnDestroy()
     {
         HarvestAbillity.Harvesting -= Harvest;
         Crop.realdyToHarvest -= NotifyRipened;
+        AnimationTriggerCrop.onHarvestTriggered -= OnHarvestTriggered;
     }
 
     public List<CropTile> GetTiles()
@@ -101,9 +104,12 @@ public class CropField : MonoBehaviour
     public void Harvest(Transform harvestSphere)
     {
         if (state != TileFieldState.Ripened)
+        {
+            Debug.Log("Không thể thu hoạch, cây chưa chín!");
             return;
-        float sphereRadius = harvestSphere.localScale.x;
+        }
 
+        float sphereRadius = harvestSphere.localScale.x;
         for (int i = 0; i < cropTiles.Count; i++)
         {
             if (cropTiles[i].IsEmpty())
@@ -157,5 +163,8 @@ public class CropField : MonoBehaviour
     {
         state = TileFieldState.Watered;
     }
-
+    private void OnHarvestTriggered()
+    {
+        Harvest(GameObject.FindObjectOfType<AnimationTriggerCrop>().transform);
+    }
 }

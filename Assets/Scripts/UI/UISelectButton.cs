@@ -1,149 +1,169 @@
-﻿using System.Collections;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using System;
+using TMPro;
+
 public class UISelectButton : MonoBehaviour
 {
-
     [Header("Building System")]
     [SerializeField] private InventoryManager inventoryManager;
-    [SerializeField] private Transform buildingButtonContainer; // Vùng chứa button
+    [SerializeField] private Transform buildingButtonContainer;
     [SerializeField] private BuildingData[] architectureData;
-    [SerializeField] private Button buildingButtonPrefab; // Prefab button
+    [SerializeField] private Button buildingButtonPrefab;
 
     [Header("SeedUI")]
-    [SerializeField] private Transform seedButtonContainer; // Vùng chứa button
-    [SerializeField] private Button seedButtonPrefab; // Prefab button
+    [SerializeField] private Transform seedButtonContainer;
+    [SerializeField] private Button seedButtonPrefab;
 
     [Header("Seeds Data")]
-    [SerializeField] private List<ItemData> seedDataList; // Danh sách hạt giống
+    [SerializeField] private List<ItemData> seedDataList;
+
+    [Header("TradeWindowUI")]
+    [SerializeField] private Transform tradeButtonContainer;
+    [SerializeField] private Button tradeButtonPrefab;
+
+    [Header("CraftWindowUI")]
+    [SerializeField] private Transform craftShopButtonContainer;
+    [SerializeField] private Button craftShopButtonPrefab;
+    [SerializeField] private Transform craftingButtonContainer;
+    [SerializeField] private Button craftingButtonPrefab;
+
+    [Header("Item trade Data")]
+    [SerializeField] private List<ItemData> itemDataList;
+
+    [Header("Item craft Data")]
+    [SerializeField] private List<ItemData> craftDataList;
 
     [Header("Inventory")]
-    [SerializeField] Inventory playerInventory;
-
-
+    [SerializeField] private Inventory playerInventory;
 
     [Header("Actions")]
     public static Action<BuildingData> buildButtonPressed;
     public static Action<ItemData> seedButtonPressed;
+    public static Action<ItemData> tradeButtonPressed;
+    public static Action<ItemData> tradeShopCraftButtonPressed;
+    public static Action<ItemData> craftButtonPressed;
 
+
+    private Dictionary<ItemData, Transform> clickedBorderDictionary = new();
 
     private void OnEnable()
     {
-        BuildingSystem.generateButton += GenerateBuildingButtons;
+        BuildingSystem.generateButton += () => GenerateButtons(architectureData, buildingButtonContainer, buildingButtonPrefab, buildButtonPressed);
         PlayerSnowAbility.generateSeedUIButton += GenerateSeedButtons;
-    }
+        TraderInteraction.EnableMarketWindow += () => GenerateButtons(itemDataList, tradeButtonContainer, tradeButtonPrefab, tradeButtonPressed, true);
+        BlackSmithInteraction.EnableSmithyWindow += () => GenerateButtons(craftDataList, craftShopButtonContainer, craftShopButtonPrefab, tradeShopCraftButtonPressed, true);
+        BlackSmithInteraction.generateItemRequire += () => GenerateButtons(craftDataList, craftingButtonContainer, craftingButtonPrefab, craftButtonPressed, true);
 
+    }
 
     private void OnDisable()
     {
-        BuildingSystem.generateButton -= GenerateBuildingButtons;
+        BuildingSystem.generateButton -= () => GenerateButtons(architectureData, buildingButtonContainer, buildingButtonPrefab, buildButtonPressed);
         PlayerSnowAbility.generateSeedUIButton -= GenerateSeedButtons;
+        TraderInteraction.EnableMarketWindow -= () => GenerateButtons(itemDataList, tradeButtonContainer, tradeButtonPrefab, tradeButtonPressed, true);
+        BlackSmithInteraction.EnableSmithyWindow -= () => GenerateButtons(craftDataList, craftShopButtonContainer, craftShopButtonPrefab, tradeShopCraftButtonPressed, true);
+        BlackSmithInteraction.generateItemRequire -= () => GenerateButtons(craftDataList, craftingButtonContainer, craftingButtonPrefab, craftButtonPressed, true);
 
 
-    }
-    private void GenerateBuildingButtons()
-    {
-        // Xóa button cũ
-        foreach (Transform child in buildingButtonContainer)
-        {
-            Destroy(child.gameObject);
-        }
-
-        foreach (BuildingData building in architectureData)
-        {
-            // Tạo button mới
-            Button newButton = Instantiate(buildingButtonPrefab, buildingButtonContainer);
-            newButton.name = building.buildingName;
-
-            // Kiểm tra Image component
-            Image buttonImage = newButton.GetComponent<Image>();
-            if (buttonImage == null)
-            {
-                Debug.LogError($" Không tìm thấy Image component trên button {newButton.name}");
-                continue;
-            }
-
-            // Kiểm tra building.icon có null không
-            if (building.icon == null)
-            {
-                Debug.LogError($" Building {building.buildingName} chưa có icon!");
-                continue;
-            }
-
-            // Gán icon và kiểm tra lại sprite
-            buttonImage.sprite = building.icon;
-            buttonImage.SetNativeSize();
-
-            // Bật/tắt Image để refresh
-            buttonImage.enabled = false;
-            buttonImage.enabled = true;
-
-            Debug.Log($" Cập nhật icon cho {building.buildingName}: {building.icon.name} ({building.icon})");
-
-            // Thêm sự kiện click
-            newButton.onClick.AddListener(() => buildButtonPressed?.Invoke(building));
-        }
     }
 
     private void GenerateSeedButtons()
     {
-        // Xóa các button cũ trước khi tạo mới
-        foreach (Transform child in seedButtonContainer)
+        if (inventoryManager == null || inventoryManager.GetInventory() == null)
+        {
+            Debug.LogError("InventoryManager chưa được gán hoặc Inventory chưa được khởi tạo!");
+            return;
+        }
+
+        Inventory inventory = inventoryManager.GetInventory();
+        InventoryItem[] inventoryItems = inventory.GetInventoryItems();
+        List<ItemData> validSeeds = new();
+
+        foreach (InventoryItem invItem in inventoryItems)
+        {
+            ItemData itemData = DataManagers.instance.GetItemDataByName(invItem.itemName);
+            if (itemData != null && itemData.itemType == ItemType.Seed)
+            {
+                validSeeds.Add(itemData);
+            }
+        }
+
+        GenerateButtons(validSeeds, seedButtonContainer, seedButtonPrefab, seedButtonPressed);
+    }
+
+    private void GenerateButtons<T>(IEnumerable<T> dataList, Transform buttonContainer, Button buttonPrefab, Action<T> onClickAction, bool isTradeUI = false)
+    {
+        // Xóa nút cũ
+        foreach (Transform child in buttonContainer)
         {
             Destroy(child.gameObject);
         }
 
-        foreach (ItemData seed in seedDataList)
+        if (isTradeUI) clickedBorderDictionary.Clear(); // Nếu là Trade UI, reset ClickedBorder dictionary
+
+        foreach (var data in dataList)
         {
-            // Tạo button mới
-            Button newButton = Instantiate(seedButtonPrefab, seedButtonContainer);
-            newButton.name = seed.itemName;
+            Button newButton = Instantiate(buttonPrefab, buttonContainer);
+            string itemName;
+            Sprite icon;
 
-      
-
-            // Kiểm tra seed.icon có null không
-            if (seed.icon == null)
+            if (data is BuildingData building)
             {
-                Debug.LogError($"❌ Hạt giống {seed.itemName} chưa có icon!");
-                continue;
+                itemName = building.buildingName;
+                icon = building.icon;
+            }
+            else if (data is ItemData item)
+            {
+                itemName = item.itemName;
+                icon = item.icon;
+            }
+            else continue;
+
+            newButton.name = itemName;
+
+            // Gán tên vào TextMeshProUGUI
+            TextMeshProUGUI itemNameText = newButton.transform.Find("ItemName")?.GetComponent<TextMeshProUGUI>();
+            if (itemNameText != null) itemNameText.text = itemName;
+
+            // Gán icon vào Image
+            Image iconImage = newButton.transform.Find("Icon")?.GetComponent<Image>();
+            if (iconImage != null && icon != null)
+            {
+                iconImage.sprite = icon;
+                iconImage.SetNativeSize();
+                iconImage.rectTransform.sizeDelta = new Vector2(70, 70);
             }
 
-         
-
-          
-
-            // Tìm Transform của Icon trong Prefab
-            Transform iconTransform = newButton.transform.Find("Icon");
-            if (iconTransform != null)
+            // Nếu là Trade UI, thêm ClickedBorder vào Dictionary
+            if (isTradeUI && data is ItemData tradeItem)
             {
-                // Gán hình ảnh vào Image trong đối tượng con Icon
-                Image iconImage = iconTransform.GetComponent<Image>();
-                if (iconImage != null)
+                Transform clickedBorder = newButton.transform.Find("ClickedBorder");
+                if (clickedBorder != null)
                 {
-                    iconImage.sprite = seed.icon;  // Gán icon vào Image con trong Icon
-                    iconImage.SetNativeSize();
-                    iconImage.rectTransform.sizeDelta = new Vector2(100, 100);  // Đảm bảo kích thước cố định cho Icon
-                }
-                else
-                {
-                    Debug.LogError($"❌ Không tìm thấy Image component trong đối tượng 'Icon' của button {newButton.name}");
+                    clickedBorder.gameObject.SetActive(false);
+                    clickedBorderDictionary[tradeItem] = clickedBorder;
                 }
             }
-            else
-            {
-                Debug.LogError($"❌ Không tìm thấy đối tượng con 'Icon' trong {newButton.name}");
-            }
 
-            // Thêm sự kiện click để chọn hạt giống
-            newButton.onClick.AddListener(() => seedButtonPressed?.Invoke(seed));
+            // Thêm sự kiện click
+            newButton.onClick.AddListener(() => onClickAction?.Invoke(data));
 
-            Debug.Log($"✅ Tạo nút {seed.itemName} với icon {seed.icon.name}");
+            Debug.Log($"Tạo nút {itemName} với icon {icon?.name}");
         }
     }
 
-
-
-
+    public void SetClickedBorderActive(ItemData item, bool isActive)
+    {
+        if (clickedBorderDictionary.TryGetValue(item, out Transform clickedBorder))
+        {
+            clickedBorder.gameObject.SetActive(isActive);
+            Debug.Log($"🔹 ClickedBorder của {item.itemName} đã {(isActive ? "bật" : "tắt")}");
+        }
+        else
+        {
+            Debug.LogError($"Không tìm thấy ClickedBorder cho {item.itemName}");
+        }
+    }
 }

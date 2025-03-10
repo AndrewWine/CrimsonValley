@@ -15,7 +15,7 @@ MonoBehaviour:
   buildingName: CowCage
   buildingPrefab: {fileID: 1367669966846542539, guid: f49f2b57871295f43a03014843c16542,
     type: 3}
-  icon: {fileID: 21300000, guid: a9b3bfb52b26b8149bad723f1eefc35d, type: 3}
+  icon: {fileID: 21300000, guid: 225e526db14311d4c85e4aae2a44752b, type: 3}
   requiredItemsIcon: {fileID: 21300000, guid: 3fe6d0db39d97d34a837fd99377da1a2, type: 3}
   requiredItems:
   - Wood

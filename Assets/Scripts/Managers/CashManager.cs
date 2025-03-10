@@ -37,6 +37,13 @@ public class CashManager : MonoBehaviour
         UpdateCoinsContainers(); // Update UI
     }
 
+    public void SpendCoins(int amount)
+    {
+        coins -= amount; // Update coins
+        SaveData(); // Save changes
+        UpdateCoinsContainers(); // Update UI
+    }
+
     public int GetCoins()
     {
         return coins;

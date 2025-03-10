@@ -17,15 +17,14 @@ public class CheckUICageStatus : MonoBehaviour
 
     protected virtual void Start()
     {
-        // 🏗 Tìm GameObject có tên "CageUI"
+        //  Tìm GameObject có tên "CageUI"
         GameObject cageUI = GameObject.Find("CageUI");
         if (cageUI == null)
         {
-            Debug.LogError("⚠ Không tìm thấy GameObject có tên 'CageUI' trong scene!");
             return;
         }
 
-        // 🔍 Tìm các component con trong "CageUI"
+        //  Tìm các component con trong "CageUI"
        
         feedButton = cageUI.transform.Find("FeedButton")?.GetComponent<Button>();
         harvestButton = cageUI.transform.Find("HarvestButton")?.GetComponent<Button>();
@@ -48,11 +47,10 @@ public class CheckUICageStatus : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("🔍 Đã vào trigger với: " + other.gameObject.name);
+        Debug.Log(" Đã vào trigger với: " + other.gameObject.name);
 
         if (other.CompareTag("Cage"))
         {
-            Debug.Log("🐔 Va chạm với chuồng gà!");
             Cage cage = other.GetComponent<Cage>();
             if (cage != null)
             {
@@ -120,7 +118,13 @@ public class CheckUICageStatus : MonoBehaviour
             currentCage.state = CageState.Empty;  // Đặt lại trạng thái sau khi thu hoạch
             UpdateCageUI(currentCage.state); // Cập nhật UI cho currentCage
             //ResetCageUI();  // Đặt lại UI cho cage hiện tại
+            currentCage.PickupItem();
             HarvestProduce.Play();
+        }
+
+        else
+        {
+            Debug.Log("Loi r");
         }
     }
 

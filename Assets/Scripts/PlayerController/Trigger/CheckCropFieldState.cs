@@ -1,4 +1,5 @@
 ﻿using System;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class CheckCropFieldState : MonoBehaviour
@@ -8,12 +9,13 @@ public class CheckCropFieldState : MonoBehaviour
     public static Action<bool> EnableWaterBTTN;
     public static Action<bool> EnableHarvestBTTN;
     public static Action<bool> UnlockCropField;
-
+    public static Action<CropField> cropFieldDetected;
 
     [Header("Elements")]
     private CropField currentCropField; // Chỉ lưu một CropField duy nhất
+    private OreRock ore;
     private LineRenderer lineRenderer;
-    
+    private PlayerBlackBoard blackBoard;
     private void Start()
     {
         // Tạo LineRenderer nếu chưa có
@@ -22,7 +24,7 @@ public class CheckCropFieldState : MonoBehaviour
         {
             lineRenderer = gameObject.AddComponent<LineRenderer>();
         }
-
+        blackBoard = GetComponentInParent<PlayerBlackBoard>();
         SetupLineRenderer();
     }
 
@@ -42,6 +44,12 @@ public class CheckCropFieldState : MonoBehaviour
                 UpdateButtons(cropField.state, true);
                 DrawOutline(cropField); // Vẽ outline khi bật UIButton
             }
+            cropFieldDetected?.Invoke(cropField);
+        }
+
+        else if(other.CompareTag("Ore"))
+        {
+            OreRock ore = other.GetComponent<OreRock>();
         }
     }
 
@@ -58,6 +66,11 @@ public class CheckCropFieldState : MonoBehaviour
 
                 lineRenderer.enabled = false; // Tắt outline khi rời đi
             }
+        }
+        
+        else if(other.CompareTag("Ground"))
+        {
+            blackBoard.isGround = true;
         }
     }
 
@@ -114,5 +127,10 @@ public class CheckCropFieldState : MonoBehaviour
     public CropField GetCurrentCropField()
     {
         return currentCropField;
+    }
+
+    public OreRock GetCurrentOreRock()
+    {
+        return ore;
     }
 }

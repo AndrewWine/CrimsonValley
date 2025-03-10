@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class PlayerToolSelector : MonoBehaviour
 {
-    public enum Tool { None, Sow, Hoe, Axe, Hammer }
+    public enum Tool { None, Sow, Hoe, Axe, Hammer, Pickaxe }
     public Tool activeTool;
 
     [Header("Elements")]
@@ -15,7 +15,7 @@ public class PlayerToolSelector : MonoBehaviour
     [Header("Settings")]
     [SerializeField] private Color selectedToolColor;
     public bool NoneToolActive;
-  
+
     [Header("Actions")]
     public Action<Tool> onToolSelected;
     public Action ActiveFarmTool;
@@ -77,4 +77,9 @@ public class PlayerToolSelector : MonoBehaviour
         return activeTool == Tool.Hammer;
     }
 
+
+    public bool CanMine()
+    {
+        return activeTool == Tool.Pickaxe;
+    }
 }

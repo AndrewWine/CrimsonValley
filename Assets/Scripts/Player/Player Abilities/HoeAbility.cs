@@ -1,43 +1,39 @@
-﻿    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEditor.ShaderGraph;
-    using UnityEngine;
-    using System;
-    public class HoeAbility : MonoBehaviour
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEditor.ShaderGraph;
+using UnityEngine;
+using System;
+using UnityEditor.Experimental.GraphView;
+public class HoeAbility : MonoBehaviour
+{
+    // Start is called before the first frame update
+    [Header(" Elements ")]
+    [SerializeField] private Transform hoeSphere;
+    [SerializeField] private GameObject CropFieldPrefab;
+    [SerializeField] private BoxCollider HoeColider;
+    [SerializeField] private LineRenderer lineRenderer;
+    private PlayerBlackBoard blackboard;
+    [Header(" Settings ")]
+    private CropTile currentCropTile;
+    private bool isGround;
+    bool isCropFieldNearby = false;
+    bool canCreateCropTile = true;
+    private Vector3 lowerPosition;
+
+
+    void Start()
     {
-        // Start is called before the first frame update
-        [Header(" Elements ")]
-        [SerializeField] private Transform hoeSphere;
-        [SerializeField] private GameObject CropFieldPrefab;
-        private PlayerAnimator playerAnimator;
-        private PlayerToolSelector playerToolSelector;
-        private BoxCollider HoeColider;
-        private LineRenderer lineRenderer;
+       
+        blackboard = GetComponentInParent<PlayerBlackBoard>();
+        SetupLineRenderer();
 
-        [Header(" Settings ")]
-        private CropTile currentCropTile;
-        private bool isGround;
-        bool isCropFieldNearby = false;
-        bool canCreateCropTile = true;
-        private Vector3 lowerPosition;
-
-
-        void Start()
-        {
-            playerToolSelector = GetComponent<PlayerToolSelector>();
-            playerAnimator = GetComponent<PlayerAnimator>();
-            HoeColider = GetComponentInChildren<BoxCollider>();
-            lineRenderer = GetComponentInChildren<LineRenderer>();
-            SetupLineRenderer();
-
-            playerToolSelector.onToolSelected += ToolSelectedCallBack;
-            ActionButton.Hoeing += CreateCropfield;
-        }
+        AnimationTriggerCrop.onCreateACropField += CreateCropfield;
+    }
 
 
     void Update()
     {
-        if (playerToolSelector.CanHoe())
+        if (blackboard.playerToolSelector.CanHoe())
         {
             lineRenderer.enabled = true;
             DrawOutline(); // Luôn cập nhật khung BoxCollider
@@ -46,43 +42,36 @@
         {
             lineRenderer.enabled = false;
         }
-  
+
 
         lowerPosition = hoeSphere.transform.position - new Vector3(0, 0.5f, 0);
-    
+
+
+    }
+
+    private void OnDisable()
+    {
+
+        AnimationTriggerCrop.onCreateACropField -= CreateCropfield;
 
     }
 
 
-    private void OnDestroy()
-        {
-            playerToolSelector.onToolSelected -= ToolSelectedCallBack;
-            ActionButton.Hoeing -= CreateCropfield;
-
-        }
-
-        private void ToolSelectedCallBack(PlayerToolSelector.Tool selectedTool)
-        {
-            if (!playerToolSelector.CanHoe())
-                playerAnimator.StopHoeAnimation();
-        }
 
     private void OnCollisionStay(Collision collision)
     {
-
         // Kiểm tra nếu va chạm với "Ground" và player có thể hoe
-        if (collision.gameObject.CompareTag("Ground") && playerAnimator.canHoe)
+        if (collision.gameObject.CompareTag("Ground"))
         {
-            isGround = true;
+            blackboard.isGround = true;
 
-            // Lấy bán kính từ SphereCollider của hoeSphere
-            SphereCollider sphereCollider = hoeSphere.GetComponent<SphereCollider>();
-            float checkRadius = sphereCollider != null ? sphereCollider.radius : 0.5f; // Nếu không tìm thấy SphereCollider, dùng giá trị mặc định
+            // Lấy bán kính từ BoxCollider của hoeSphere
+            BoxCollider boxCollider = hoeSphere.GetComponent<BoxCollider>();
+            Vector3 checkSize = boxCollider != null ? boxCollider.size * 0.5f : Vector3.one * 0.5f; // Nếu không tìm thấy BoxCollider, dùng kích thước mặc định
 
             // Kiểm tra nếu hoeSphere không chạm vào bất kỳ CropTile nào
-            Collider[] hitColliders = Physics.OverlapBox(hoeSphere.transform.position, HoeColider.size * 0.5f, Quaternion.identity);
-
-            isCropFieldNearby = false; // Giả sử không có CropTile
+            Collider[] hitColliders = Physics.OverlapBox(hoeSphere.transform.position, checkSize, Quaternion.identity);
+            isCropFieldNearby = false; // Mặc định không có CropTile
 
             foreach (Collider hit in hitColliders)
             {
@@ -93,29 +82,29 @@
                 }
             }
         }
-        else
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Ground"))
         {
-            isGround = false;
+            blackboard.isGround = true;
+        }
+    }
+
+    private void OnCollisionExit(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Ground"))
+        {
+            blackboard.isGround = false;
         }
     }
 
 
     private void CreateCropfield()
+    {
+        if (!isGround)
         {
-            if (!isGround) 
-
-            // Chạy Coroutine để đợi hoạt ảnh hoàn thành trước khi tạo Croptile
-            StartCoroutine(WaitForHoeAnimation());
-        }
-
-        private IEnumerator WaitForHoeAnimation()
-        {
-            // Lấy thời gian chạy của animation "Hoe"
-            float animationTime = 0.7f;
-
-            // Đợi cho hoạt ảnh chạy xong
-            yield return new WaitForSeconds(animationTime);
-
             // Làm tròn vị trí để khớp lưới
             float tileSize = 1.0f;
             Vector3 snappedPosition = new Vector3(
@@ -129,28 +118,31 @@
             {
                 Instantiate(CropFieldPrefab, snappedPosition, Quaternion.identity);
             }
-        }
+        }  
+    }
+
+ 
 
 
 
-        /// <summary>
-        /// Kiểm tra xem một vị trí đã có CropTile hay chưa.
-        /// </summary>
-        /// <param name="position">Vị trí cần kiểm tra.</param>
-        /// <returns>True nếu đã có CropTile, False nếu chưa.</returns>
-        private bool IsPositionOccupied(Vector3 position)
+    /// <summary>
+    /// Kiểm tra xem một vị trí đã có CropTile hay chưa.
+    /// </summary>
+    /// <param name="position">Vị trí cần kiểm tra.</param>
+    /// <returns>True nếu đã có CropTile, False nếu chưa.</returns>
+    private bool IsPositionOccupied(Vector3 position)
+    {
+        // Kiểm tra có Collider nào với tag "Croptile" tại vị trí này không
+        Collider[] colliders = Physics.OverlapSphere(position, 0.4f); // Bán kính kiểm tra nhỏ để tránh lỗi
+        foreach (Collider collider in colliders)
         {
-            // Kiểm tra có Collider nào với tag "Croptile" tại vị trí này không
-            Collider[] colliders = Physics.OverlapSphere(position, 0.4f); // Bán kính kiểm tra nhỏ để tránh lỗi
-            foreach (Collider collider in colliders)
+            if (collider.CompareTag("Croptile"))
             {
-                if (collider.CompareTag("Croptile"))
-                {
-                    return true; // Đã có CropTile tại vị trí này
-                }
+                return true; // Đã có CropTile tại vị trí này
             }
-            return false; // Vị trí còn trống
         }
+        return false; // Vị trí còn trống
+    }
 
 
     void SetupLineRenderer()

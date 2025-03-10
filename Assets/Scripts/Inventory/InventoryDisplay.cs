@@ -18,7 +18,7 @@ public class InventoryDisplay : MonoBehaviour
             Transform parent = GetParentByItemType(item.itemType);  // Lấy parent dựa trên ItemType
             UIcropContainer containerInstance = Instantiate(uicropContainer, parent);
             Sprite itemIcon = DataManagers.instance.GetItemSpriteFromName(item.itemName);
-            containerInstance.Configure(itemIcon, item.amount);
+            containerInstance.Configure(itemIcon, item.amount, item.itemName);
         }
     }
 
@@ -26,49 +26,40 @@ public class InventoryDisplay : MonoBehaviour
     {
         InventoryItem[] items = inventory.GetInventoryItems();
 
-        if (items.Length == 0)
-        {
-            HideAllItemContainers();
-            return;
-        }
-
-        for (int i = 0; i < items.Length; i++)
-        {
-            Transform parent = GetParentByItemType(items[i].itemType);
-            UIcropContainer containerInstance;
-
-            if (i < parent.childCount)
-            {
-                containerInstance = parent.GetChild(i).GetComponent<UIcropContainer>();
-                containerInstance.gameObject.SetActive(true);
-            }
-            else
-            {
-                containerInstance = Instantiate(uicropContainer, parent);
-            }
-
-            Sprite itemIcon = DataManagers.instance.GetItemSpriteFromName(items[i].itemName); 
-            containerInstance.Configure(itemIcon, items[i].amount);
-        }
-
+        // Xóa các item không còn trong kho
         RemoveItemIconFromInventory(inventory);
+
+        // Cập nhật lại danh sách item trong UI
+        foreach (var item in items)
+        {
+            Transform parent = GetParentByItemType(item.itemType);
+            bool itemExists = false;
+
+            // Kiểm tra nếu item đã tồn tại trong UI
+            foreach (Transform child in parent)
+            {
+                UIcropContainer container = child.GetComponent<UIcropContainer>();
+                if (container != null && container.GetIcon() == DataManagers.instance.GetItemSpriteFromName(item.itemName))
+                {
+                    // Nếu item đã tồn tại, cập nhật số lượng mới
+                    itemExists = true;
+                    container.UpdateAmount(item.amount);  // Thêm dòng này để cập nhật số lượng
+                    break;
+                }
+            }
+
+            // Nếu item chưa có trong UI, tạo mới
+            if (!itemExists)
+            {
+                UIcropContainer containerInstance = Instantiate(uicropContainer, parent);
+                Sprite itemIcon = DataManagers.instance.GetItemSpriteFromName(item.itemName);
+                containerInstance.Configure(itemIcon, item.amount,item.itemName);
+            }
+        }
     }
 
 
 
-    // Hàm ẩn tất cả item trong UI inventory
-    private void HideAllItemContainers()
-    {
-        foreach (Transform child in cropContainersParent)
-            child.gameObject.SetActive(false);
-
-        foreach (Transform child in materialContainerParent)
-            child.gameObject.SetActive(false);
-
-        foreach (Transform child in toolContainersParent)
-            child.gameObject.SetActive(false);
-
-    }
 
     private void RemoveItemIconFromInventory(Inventory inventory)
     {
@@ -88,7 +79,7 @@ public class InventoryDisplay : MonoBehaviour
 
                 if (item == null || item.amount <= 0)
                 {
-                    Destroy(container.gameObject);
+                    Destroy(container.gameObject); // Xóa container này
                 }
             }
         }
@@ -101,6 +92,8 @@ public class InventoryDisplay : MonoBehaviour
         switch (itemType)
         {
             case ItemType.Seed:
+                return cropContainersParent;
+            case ItemType.Produce:
                 return cropContainersParent;
             case ItemType.Material:
                 return materialContainerParent;

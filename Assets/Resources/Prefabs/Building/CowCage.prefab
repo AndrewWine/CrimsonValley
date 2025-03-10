@@ -486,14 +486,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 980063d34e5c9214aa7a9a3e02c2f38a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inventory:
-    items: []
   state: 0
+  itemDrop: {fileID: 11400000, guid: 8236808f68cb6df43bcadbdb4c105477, type: 2}
   nutrition: 0
   harvestTimer: 10
   slot: 0
   feedingTimer: 0
   DigestionTime: 10
+  dropAmount: 1
   quantity: 0
   nameOfMaterial: 
 --- !u!54 &1578278777632966750
@@ -1465,7 +1465,6 @@ GameObject:
   - component: {fileID: 4330337049255494290}
   - component: {fileID: 2351299821982102116}
   - component: {fileID: 458667225634030562}
-  - component: {fileID: 4514541916589085479}
   m_Layer: 0
   m_Name: stable
   m_TagString: Untagged
@@ -1540,28 +1539,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &4514541916589085479
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3286779140625186516}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 980063d34e5c9214aa7a9a3e02c2f38a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  inventory:
-    items: []
-  state: 0
-  nutrition: 0
-  harvestTimer: 0
-  slot: 0
-  feedingTimer: 0
-  DigestionTime: 10
-  quantity: 0
-  nameOfMaterial: 
 --- !u!1 &3393908485709813624
 GameObject:
   m_ObjectHideFlags: 0

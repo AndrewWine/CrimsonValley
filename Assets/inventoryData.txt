@@ -1,14 +1,84 @@
 {
     "items": [
         {
-            "itemName": "RawRice",
-            "amount": 1,
+            "itemName": "Wood",
+            "amount": 181,
             "itemType": 1
         },
         {
-            "itemName": "Pumpkin",
-            "amount": 1,
+            "itemName": "Egg",
+            "amount": 8,
             "itemType": 1
+        },
+        {
+            "itemName": "RawFleece",
+            "amount": 3,
+            "itemType": 1
+        },
+        {
+            "itemName": "Fabric",
+            "amount": 3,
+            "itemType": 1
+        },
+        {
+            "itemName": "CopperIngot",
+            "amount": 54,
+            "itemType": 1
+        },
+        {
+            "itemName": "IronIngot",
+            "amount": 33,
+            "itemType": 1
+        },
+        {
+            "itemName": "PlatiumIngot",
+            "amount": 16,
+            "itemType": 1
+        },
+        {
+            "itemName": "GoldIngot",
+            "amount": 27,
+            "itemType": 1
+        },
+        {
+            "itemName": "PumkinSeed",
+            "amount": 21,
+            "itemType": 0
+        },
+        {
+            "itemName": "Tomato",
+            "amount": 40,
+            "itemType": 0
+        },
+        {
+            "itemName": "Potato",
+            "amount": 8,
+            "itemType": 0
+        },
+        {
+            "itemName": "IronPickAxe",
+            "amount": 2,
+            "itemType": 2
+        },
+        {
+            "itemName": "GoldPickAxe",
+            "amount": 2,
+            "itemType": 2
+        },
+        {
+            "itemName": "PlatiumPickAxe",
+            "amount": 1,
+            "itemType": 2
+        },
+        {
+            "itemName": "CopperAxe",
+            "amount": 1,
+            "itemType": 2
+        },
+        {
+            "itemName": "PlatiumAxe",
+            "amount": 1,
+            "itemType": 2
         }
     ]
 }

@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5a5574d67159a3349acdda89547eeff5, type: 3}
+  m_Name: MilkBuket
+  m_EditorClassIdentifier: 
+  itemName: MilkBuket
+  itemType: 3
+  itemPrefab: {fileID: 8227063472550622780, guid: 884902ec72fe46d4faa0f4bf6492870e,
+    type: 3}
+  icon: {fileID: 21300000, guid: dcd6659721614a24993e967756abcc93, type: 3}
+  price: 7

@@ -6,13 +6,14 @@ public class ActionButton : MonoBehaviour
 {
     [Header("Elements")]
     private PlayerToolSelector playerToolSelector;
-    private PlayerAnimator playerAnimator;
+    private PlayerBlackBoard blackBoard;
 
     [Header("Settings")]
     [SerializeField] private Button actionButton;
     [SerializeField] private Button sowButton;
     [SerializeField] private Button waterButton;
     [SerializeField] private Button harvestButton;
+
 
     public CropField cropField;
 
@@ -21,16 +22,14 @@ public class ActionButton : MonoBehaviour
     public static Action Cutting;//HoeAbility
     public static Action Building;//HoeAbility
 
-
     private void Start()
     {
         // Ẩn tất cả các nút khi khởi động
         sowButton.gameObject.SetActive(false);
         waterButton.gameObject.SetActive(false);
         harvestButton.gameObject.SetActive(false);
-
+        blackBoard = GetComponentInParent<PlayerBlackBoard>();
         playerToolSelector = GetComponent<PlayerToolSelector>();
-        playerAnimator = GetComponent<PlayerAnimator>();
         actionButton.onClick.AddListener(DoAction);
 
         // Đăng ký các sự kiện từ CheckCropFieldState
@@ -51,16 +50,23 @@ public class ActionButton : MonoBehaviour
     {
         if (playerToolSelector.activeTool == PlayerToolSelector.Tool.Hoe)
         {
-            playerAnimator.PlayHoeAnimation();
-            Hoeing?.Invoke(); // Kích hoạt sự kiện Hoeing
+            // playerAnimator.PlayHoeAnimation();
+            PlayerStatusManager.Instance.UseStamina(1); // Mỗi lần dùng công cụ trừ 10 Stamina
+            blackBoard.hoeButtonPressed = true;
         }
         else if(playerToolSelector.activeTool == PlayerToolSelector.Tool.Axe)
         {
-            Cutting?.Invoke();//CuttingAbility
+            blackBoard.cutButtonPressed = true;
         }
         else if (playerToolSelector.activeTool == PlayerToolSelector.Tool.Hammer)
         {
             Building?.Invoke();//Building
+        }
+
+        else if(playerToolSelector.activeTool == PlayerToolSelector.Tool.Pickaxe)
+        {
+            blackBoard.miningButtonPressed = true;
+            Debug.Log("domining");
         }
 
     }
@@ -80,5 +86,10 @@ public class ActionButton : MonoBehaviour
     public void EnableHarvestButton(bool enable)
     {
         harvestButton.gameObject.SetActive(enable);
+    }
+
+    public void OnJumpButtonPressed()
+    {
+        blackBoard.jumpButtonPressed = true;    
     }
 }

@@ -13,6 +13,7 @@ TagManager:
   - Croptile
   - Tree
   - Cage
+  - Ore
   layers:
   - Default
   - TransparentFX

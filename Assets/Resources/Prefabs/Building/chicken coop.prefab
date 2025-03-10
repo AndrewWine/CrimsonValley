@@ -1017,14 +1017,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f593f61b5a328e04ca0b43c55c4c6a6b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inventory:
-    items: []
   state: 0
+  itemDrop: {fileID: 11400000, guid: 4c4147c765555d64ab0ad17f6194d46e, type: 2}
   nutrition: 10
   harvestTimer: 0
   slot: 0
   feedingTimer: 0
   DigestionTime: 10
+  dropAmount: 0
   quantity: 0
   nameOfMaterial: 
 --- !u!1 &6875726017981718580

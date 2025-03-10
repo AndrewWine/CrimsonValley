@@ -7,7 +7,6 @@ public class Crop : Item
     [SerializeField] private ParticleSystem harvestedParticles;
 
     private int TimeToGrowUp = 10;
-    private int TimeToGrowDown = 1;
 
     private bool isFullyGrown = false; //Biến kiểm soát
 
@@ -34,15 +33,13 @@ public class Crop : Item
     public void ScaleDown()
     {
         if (!isFullyGrown) return; // Nếu chưa lớn đủ, không thu hoạch
-
-        Destroy(gameObject); // Xóa cây sau khi hoàn thành
-        Debug.Log("Da scaledown");
-
-        // Kích hoạt hiệu ứng hạt sau khi thu hoạch
         harvestedParticles.gameObject.SetActive(true);
         harvestedParticles.transform.parent = null;
         harvestedParticles.Play();
+        Destroy(gameObject); // Xóa cây sau khi hoàn thành
 
-        Debug.Log("Da Play");
+        // Kích hoạt hiệu ứng hạt sau khi thu hoạch
+
+
     }
 }

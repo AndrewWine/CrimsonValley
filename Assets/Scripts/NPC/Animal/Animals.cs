@@ -15,6 +15,7 @@ public class Animals : MonoBehaviour
     {
         animator = GetComponent<Animator>();
         animationClips = animator.runtimeAnimatorController.animationClips; // Lấy tất cả Animation Clips từ Animator Controller
+
         if (animationClips.Length > 0)
         {
             StartCoroutine(PlayRandomAnimation());

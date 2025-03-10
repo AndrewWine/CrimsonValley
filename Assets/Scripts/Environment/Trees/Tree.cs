@@ -15,11 +15,13 @@ public class Tree : Item, IHitAble, IDamageAble
 
 
     [Header("Settings")]
-    [SerializeField] private int TopTreeHealth;
-    [SerializeField] private int TrunkTreeHealth;
+    [SerializeField] private float TopTreeHealth;
+    [SerializeField] private float TrunkTreeHealth;
+    [SerializeField] private int dropAmount;
+
 
     [Header("Actions")]
-    public static Action<string> onPickupWood;
+    public static Action<string, int> onPickupWood;
 
     private Color startColor;
     private float fadeDuration = 6f; // Thời gian mờ dần (6 giây)
@@ -35,6 +37,13 @@ public class Tree : Item, IHitAble, IDamageAble
         topTreeRenderer = TopTree.GetComponentInChildren<Renderer>();
         startColor = topTreeRenderer.material.color; // Lưu lại màu ban đầu
         InitializedStats();
+        caculatedDropAmount();
+
+    }
+
+    private void caculatedDropAmount()
+    {
+        dropAmount = UnityEngine.Random.Range(2, 5);
     }
 
     private void Update()
@@ -82,12 +91,13 @@ public class Tree : Item, IHitAble, IDamageAble
 
     private void PickedWood()
     {
+        caculatedDropAmount();
         woodParticles.gameObject.SetActive(true);
         woodParticles.transform.parent = null;
         woodParticles.Play();
 
         // Gọi sự kiện để thông báo thu thập Wood
-        onPickupWood?.Invoke(itemData.itemName);//InventoryManager
+        onPickupWood?.Invoke(itemData.itemName, dropAmount);//InventoryManager
 
         Invoke("DisableParticles", 1f);
     }
@@ -126,10 +136,11 @@ public class Tree : Item, IHitAble, IDamageAble
         Destroy(TopTree.gameObject);
     }
 
-    public void TakeDamage(int target)
+    public void TakeDamage(float target)
     {
         if (isTopTree)
         {
+            Debug.Log("Dâmgeee");
             ShakeTree(); // Gọi rung cây
             TopTreeHealth -= target;
         }
