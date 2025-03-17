@@ -5612,6 +5612,8 @@ MonoBehaviour:
   hoeSphere: {fileID: 711805037340559474}
   CropFieldPrefab: {fileID: 810295258339699455, guid: 552944290702a524b84e478fe754d4e1,
     type: 3}
+  HoeColider: {fileID: 0}
+  lineRenderer: {fileID: 0}
 --- !u!1 &3070126378788905946
 GameObject:
   m_ObjectHideFlags: 0
@@ -5881,15 +5883,20 @@ MonoBehaviour:
   waterState: {fileID: 415672462635872575}
   hoeState: {fileID: 6959205615745143173}
   cutState: {fileID: 7101129540674883158}
+  miningState: {fileID: 0}
+  jumpState: {fileID: 0}
   playerToolSelector: {fileID: 3520720500708804710}
+  playerTransform: {fileID: 0}
   health: 100
   maxHealth: 100
   stamina: 100
   maxStamina: 100
-  damage: 1
+  Axedamage: 1
+  Pickaxedamage: 1
   speed: 150
   runThreshold: 0.2
   moveSpeedMultiplier: 1000
+  JumpForce: 100
   seed: {fileID: 0}
   isGround: 0
   sowButtonPressed: 0
@@ -5897,6 +5904,8 @@ MonoBehaviour:
   waterButtonPressed: 0
   hoeButtonPressed: 0
   cutButtonPressed: 0
+  miningButtonPressed: 0
+  jumpButtonPressed: 0
 --- !u!1 &3322264245127130137
 GameObject:
   m_ObjectHideFlags: 0

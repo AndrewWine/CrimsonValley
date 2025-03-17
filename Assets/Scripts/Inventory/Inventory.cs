@@ -11,7 +11,7 @@ public class Inventory
     {
         if (amount <= 0)
         {
-            Debug.LogError("Số lượng mua phải lớn hơn 0.");
+            Debug.Log("Số lượng mua phải lớn hơn 0.");
             return;
         }
 

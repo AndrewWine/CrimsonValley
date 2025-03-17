@@ -14,6 +14,7 @@ public class PlayerBlackBoard : EntityBlackboard
     public CutState cutState;
     public MiningState miningState;
     public JumpState jumpState;
+    public SleepState sleepState;
 
 
     [Header("Elements")]
@@ -46,7 +47,8 @@ public class PlayerBlackBoard : EntityBlackboard
     public bool cutButtonPressed = false;
     public bool miningButtonPressed = false;
     public bool jumpButtonPressed = false;
-
+    public bool sleepButtonPressed = false;
+    public bool timeToSleep = false;
 
 
 }

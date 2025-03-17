@@ -15,7 +15,7 @@ public class HoeAbility : MonoBehaviour
     private PlayerBlackBoard blackboard;
     [Header(" Settings ")]
     private CropTile currentCropTile;
-    private bool isGround;
+    [SerializeField]private bool canHoe;
     bool isCropFieldNearby = false;
     bool canCreateCropTile = true;
     private Vector3 lowerPosition;
@@ -44,7 +44,7 @@ public class HoeAbility : MonoBehaviour
         }
 
 
-        lowerPosition = hoeSphere.transform.position - new Vector3(0, 0.5f, 0);
+        lowerPosition = hoeSphere.transform.position - new Vector3(0, 0.6f, 0);
 
 
     }
@@ -58,20 +58,19 @@ public class HoeAbility : MonoBehaviour
 
 
 
-    private void OnCollisionStay(Collision collision)
+    private void OnTriggerStay(Collider other)
     {
-        // Kiểm tra nếu va chạm với "Ground" và player có thể hoe
-        if (collision.gameObject.CompareTag("Ground"))
+        if (other.CompareTag("FarmArea"))
         {
-            blackboard.isGround = true;
+            canHoe = true;
 
             // Lấy bán kính từ BoxCollider của hoeSphere
             BoxCollider boxCollider = hoeSphere.GetComponent<BoxCollider>();
-            Vector3 checkSize = boxCollider != null ? boxCollider.size * 0.5f : Vector3.one * 0.5f; // Nếu không tìm thấy BoxCollider, dùng kích thước mặc định
+            Vector3 checkSize = boxCollider != null ? boxCollider.size * 0.5f : Vector3.one * 0.5f;
 
             // Kiểm tra nếu hoeSphere không chạm vào bất kỳ CropTile nào
             Collider[] hitColliders = Physics.OverlapBox(hoeSphere.transform.position, checkSize, Quaternion.identity);
-            isCropFieldNearby = false; // Mặc định không có CropTile
+            isCropFieldNearby = false;
 
             foreach (Collider hit in hitColliders)
             {
@@ -84,17 +83,17 @@ public class HoeAbility : MonoBehaviour
         }
     }
 
-    private void OnCollisionEnter(Collision collision)
+    private void OnTriggerEnter(Collider other)
     {
-        if (collision.gameObject.CompareTag("Ground"))
+        if (other.CompareTag("FarmArea"))
         {
-            blackboard.isGround = true;
+            canHoe = true;
         }
     }
 
-    private void OnCollisionExit(Collision collision)
+    private void OnTriggerExit(Collider other)
     {
-        if (collision.gameObject.CompareTag("Ground"))
+        if (other.CompareTag("FarmArea"))
         {
             blackboard.isGround = false;
         }
@@ -103,7 +102,7 @@ public class HoeAbility : MonoBehaviour
 
     private void CreateCropfield()
     {
-        if (!isGround)
+        if (canHoe)
         {
             // Làm tròn vị trí để khớp lưới
             float tileSize = 1.0f;
@@ -118,7 +117,10 @@ public class HoeAbility : MonoBehaviour
             {
                 Instantiate(CropFieldPrefab, snappedPosition, Quaternion.identity);
             }
-        }  
+
+            PlayerStatusManager.Instance.UseStamina(2); // Mỗi lần dùng công cụ trừ 2 Stamina
+
+        }
     }
 
  

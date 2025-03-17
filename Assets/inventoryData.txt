@@ -2,7 +2,7 @@
     "items": [
         {
             "itemName": "Wood",
-            "amount": 181,
+            "amount": 269,
             "itemType": 1
         },
         {
@@ -22,27 +22,27 @@
         },
         {
             "itemName": "CopperIngot",
-            "amount": 54,
+            "amount": 74,
             "itemType": 1
         },
         {
             "itemName": "IronIngot",
-            "amount": 33,
+            "amount": 41,
             "itemType": 1
         },
         {
             "itemName": "PlatiumIngot",
-            "amount": 16,
+            "amount": 18,
             "itemType": 1
         },
         {
             "itemName": "GoldIngot",
-            "amount": 27,
+            "amount": 33,
             "itemType": 1
         },
         {
             "itemName": "PumkinSeed",
-            "amount": 21,
+            "amount": 45,
             "itemType": 0
         },
         {
@@ -52,7 +52,7 @@
         },
         {
             "itemName": "Potato",
-            "amount": 8,
+            "amount": 17,
             "itemType": 0
         },
         {

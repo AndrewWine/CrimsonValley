@@ -5,17 +5,19 @@ using UnityEngine.UI;
 
 public class TooltipManager : MonoBehaviour
 {
+    [Header("Actions")]
     public static TooltipManager Instance;
-    private ItemData currentItemData; // Sử dụng ItemData thay vì int để lưu trữ đầy đủ thông tin item
-
     public static Action<ItemData> NotifyEquipItem;
 
+    [Header("Elements")]
+    private ItemData currentItemData; // Sử dụng ItemData thay vì int để lưu trữ đầy đủ thông tin item
     [SerializeField] private GameObject tooltipPanel;
     [SerializeField] private TextMeshProUGUI itemNameText;
     [SerializeField] private TextMeshProUGUI itemPriceText;
     [SerializeField] private TextMeshProUGUI itemDamageText;
     [SerializeField] private TextMeshProUGUI itemDurabilityText;
     [SerializeField] private Image itemIcon;
+    [SerializeField] GameObject EquipButton;
 
     private void Awake()
     {
@@ -23,6 +25,11 @@ public class TooltipManager : MonoBehaviour
         tooltipPanel.SetActive(false);
     }
 
+    private void OnEnable()
+    {
+        BlackSmithInteraction.OpenedSmithyWindow += CheckCanEnableEquipButton;
+        TraderInteraction.OpenedMarketWindow += CheckCanEnableEquipButton;
+    }
     public void ShowToolTipOnTradeWindow(ItemData itemData)
     {
         currentItemData = itemData; // Lưu ItemData đầy đủ
@@ -44,6 +51,11 @@ public class TooltipManager : MonoBehaviour
         itemPriceText.text = "";
         itemDamageText.text = "";
         itemDurabilityText.text = "";
+    }
+
+    private void CheckCanEnableEquipButton(bool check)
+    {
+        EquipButton.gameObject.SetActive(!check);
     }
 
     public void OnEquipItem()

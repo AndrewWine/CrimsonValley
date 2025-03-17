@@ -1,33 +1,70 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class OreRock : MonoBehaviour, IDamageAble
 {
-    [Header("Elements")]
-    public OreData oreData;
-    public float health = 3; // Số lần đào trước khi vỡ
-    [SerializeField]private ParticleSystem oreParticle;
+    [Header("Ore Properties")]
+    public float maxHealth = 20;
+    private float currentHealth;
 
+    private Vector3 originalPosition;
 
-    public void MineOre()
+    [System.Serializable]
+    public struct DropItem
     {
-        if (oreData != null)
-        {
-            InventoryManager.Instance.PickUpItemCallBack(oreData.ingotToGive.itemName, oreData.dropAmount);
-        }
-
-        // Tách hiệu ứng hạt ra khỏi quặng trước khi phá hủy
-        if (oreParticle != null)
-        {
-            oreParticle.transform.SetParent(null); // Tách khỏi OreRock
-            oreParticle.gameObject.SetActive(true); // Kích hoạt lại particle system
-            oreParticle.Play();
-            Destroy(oreParticle.gameObject, oreParticle.main.duration); // Xóa particle sau khi chạy xong
-        }
-
-        Destroy(gameObject);
+        public ItemData itemData;
+        public float dropRate;
+        public int dropAmount;
     }
 
+    [Header("Drop Table (Editable)")]
+    public List<DropItem> dropTable = new List<DropItem>();
+
+    private void OnEnable()
+    {
+        currentHealth = maxHealth;
+        originalPosition = transform.position;
+    }
+
+    public void TakeDamage(float damage)
+    {
+        currentHealth -= damage;
+        PlayerStatusManager.Instance.UseStamina(1);
+
+        StartCoroutine(ShakeEffect());
+
+  
+
+        if (currentHealth <= 0)
+        {
+            MineOre();
+        }
+    }
+
+    private void MineOre()
+    {
+        DropItem? droppedItem = GetRandomDrop();
+        if (droppedItem.HasValue)
+        {
+            InventoryManager.Instance.PickUpItemCallBack(droppedItem.Value.itemData.itemName, droppedItem.Value.dropAmount);
+        }
+
+
+        // Trả về Object Pool
+        if (ObjectPool.Instance != null)
+        {
+            ObjectPool.Instance.ReturnObject(gameObject);
+        }
+        else
+        {
+            Debug.LogError("ObjectPool.Instance is null! Make sure ObjectPool exists in the scene.");
+        }
+
+
+        // Đợi 10 phút rồi spawn lại từ Object Pool
+        ObjectPool.Instance.StartCoroutine(RespawnOre());
+    }
 
     private IEnumerator ShakeEffect()
     {
@@ -40,7 +77,6 @@ public class OreRock : MonoBehaviour, IDamageAble
             float x = Random.Range(-0.1f, 0.1f);
             float y = Random.Range(-0.1f, 0.1f);
             transform.position = originalPos + new Vector3(x, y, 0);
-
             elapsedTime += Time.deltaTime;
             yield return null;
         }
@@ -48,27 +84,35 @@ public class OreRock : MonoBehaviour, IDamageAble
         transform.position = originalPos;
     }
 
-    public void TakeDamage(float damage)
+    private IEnumerator RespawnOre()
     {
-        Debug.Log("- HP ore");
-        health -= damage;
+        yield return new WaitForSeconds(600f); // Chờ 10 phút
 
-        if (oreParticle != null && oreParticle.gameObject != null)
-        {
-            oreParticle.gameObject.SetActive(true); // Kích hoạt lại particle system
-            oreParticle.Play();
-        }
-        else
-        {
-            Debug.LogWarning("oreParticle đã bị hủy!");
-        }
-
-        StartCoroutine(ShakeEffect());
-
-        if (health <= 0)
-        {
-            MineOre();
-        }
-
-     }
+        GameObject newOre = ObjectPool.Instance.GetObject(originalPosition);
+        OreRock oreRock = newOre.GetComponent<OreRock>();
+        oreRock.ResetOre();
     }
+
+    public void ResetOre()
+    {
+        currentHealth = maxHealth;
+        transform.position = originalPosition;
+        gameObject.SetActive(true);
+    }
+
+    private DropItem? GetRandomDrop()
+    {
+        float randomValue = Random.Range(0f, 100f);
+        float cumulativeProbability = 0f;
+
+        foreach (var drop in dropTable)
+        {
+            cumulativeProbability += drop.dropRate;
+            if (randomValue <= cumulativeProbability)
+            {
+                return drop;
+            }
+        }
+        return null;
+    }
+}

@@ -8,8 +8,10 @@ public class CheckCropFieldState : MonoBehaviour
     public static Action<bool> EnableSowBTTN;
     public static Action<bool> EnableWaterBTTN;
     public static Action<bool> EnableHarvestBTTN;
+    public static Action<bool> EnableSleepBTTN;
     public static Action<bool> UnlockCropField;
     public static Action<CropField> cropFieldDetected;
+    public static Action<bool> changeCameraAngel;
 
     [Header("Elements")]
     private CropField currentCropField; // Chỉ lưu một CropField duy nhất
@@ -30,6 +32,8 @@ public class CheckCropFieldState : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        Debug.Log(" Đã vào trigger với: " + other.gameObject.name);
+
         if (other.CompareTag("Croptile"))
         {
             CropField cropField = other.GetComponent<CropField>();
@@ -51,6 +55,15 @@ public class CheckCropFieldState : MonoBehaviour
         {
             OreRock ore = other.GetComponent<OreRock>();
         }
+
+    
+
+        else if(other.CompareTag("Indoor"))
+        {
+            changeCameraAngel?.Invoke(true);
+            EnableSleepBTTN?.Invoke(true);
+
+        }
     }
 
     private void OnTriggerExit(Collider other)
@@ -67,10 +80,13 @@ public class CheckCropFieldState : MonoBehaviour
                 lineRenderer.enabled = false; // Tắt outline khi rời đi
             }
         }
-        
-        else if(other.CompareTag("Ground"))
+    
+
+        else if (other.CompareTag("Indoor"))
         {
-            blackBoard.isGround = true;
+            changeCameraAngel?.Invoke(false);
+            EnableSleepBTTN?.Invoke(false);
+
         }
     }
 

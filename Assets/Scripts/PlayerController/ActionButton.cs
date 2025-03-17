@@ -13,6 +13,8 @@ public class ActionButton : MonoBehaviour
     [SerializeField] private Button sowButton;
     [SerializeField] private Button waterButton;
     [SerializeField] private Button harvestButton;
+    [SerializeField] private Button sleepButton;
+
 
 
     public CropField cropField;
@@ -28,6 +30,7 @@ public class ActionButton : MonoBehaviour
         sowButton.gameObject.SetActive(false);
         waterButton.gameObject.SetActive(false);
         harvestButton.gameObject.SetActive(false);
+        sleepButton.gameObject.SetActive(false);
         blackBoard = GetComponentInParent<PlayerBlackBoard>();
         playerToolSelector = GetComponent<PlayerToolSelector>();
         actionButton.onClick.AddListener(DoAction);
@@ -36,6 +39,8 @@ public class ActionButton : MonoBehaviour
         CheckCropFieldState.EnableSowBTTN += EnableSowButton;
         CheckCropFieldState.EnableWaterBTTN += EnableWaterButton;
         CheckCropFieldState.EnableHarvestBTTN += EnableHarvestButton;
+        CheckCropFieldState.EnableSleepBTTN += EnableSleepButton;
+
     }
 
     private void OnDestroy()
@@ -44,6 +49,7 @@ public class ActionButton : MonoBehaviour
         CheckCropFieldState.EnableSowBTTN -= EnableSowButton;
         CheckCropFieldState.EnableWaterBTTN -= EnableWaterButton;
         CheckCropFieldState.EnableHarvestBTTN -= EnableHarvestButton;
+        CheckCropFieldState.EnableSleepBTTN -= EnableSleepButton;
     }
 
     public void DoAction()
@@ -51,7 +57,6 @@ public class ActionButton : MonoBehaviour
         if (playerToolSelector.activeTool == PlayerToolSelector.Tool.Hoe)
         {
             // playerAnimator.PlayHoeAnimation();
-            PlayerStatusManager.Instance.UseStamina(1); // Mỗi lần dùng công cụ trừ 10 Stamina
             blackBoard.hoeButtonPressed = true;
         }
         else if(playerToolSelector.activeTool == PlayerToolSelector.Tool.Axe)
@@ -71,7 +76,17 @@ public class ActionButton : MonoBehaviour
 
     }
 
+    public void OnSleepButtonPressed()
+    {
+        blackBoard.sleepButtonPressed = true;
+    }
+
     //Các hàm này sẽ tự động được gọi khi có sự kiện từ CheckCropFieldState
+
+    public void EnableSleepButton(bool enable)
+    {
+        sleepButton.gameObject.SetActive(enable);
+    }
 
     public void EnableSowButton(bool enable)
     {

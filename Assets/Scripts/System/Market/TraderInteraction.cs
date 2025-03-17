@@ -10,6 +10,7 @@ public class TraderInteraction : MonoBehaviour
 
     [Header("Actions")]
     public static Action EnableMarketWindow;
+    public static Action<bool> OpenedMarketWindow;
 
     private void Start()
     {
@@ -133,6 +134,7 @@ public class TraderInteraction : MonoBehaviour
             }
 
             EnableMarketWindow?.Invoke();
+            OpenedMarketWindow?.Invoke(true);
             WindowPanel.gameObject.SetActive(true);
         }
     }
@@ -150,6 +152,8 @@ public class TraderInteraction : MonoBehaviour
     {
         TooltipManager.Instance.HideTooltip();
         WindowPanel.gameObject.SetActive(false);
+        OpenedMarketWindow?.Invoke(false);
+
     }
 
 

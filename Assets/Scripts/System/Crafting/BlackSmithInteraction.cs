@@ -7,13 +7,14 @@ public class BlackSmithInteraction : UIRequirementDisplay
     [Header("Elements")]
     [SerializeField] private InventoryManager inventoryManager;
     [SerializeField] private GameObject WindowShopPanel;
-    [SerializeField] private GameObject WindowCraftingPanel;
+    [SerializeField] private GameObject WindowCraftingPanel;    
+
 
 
     [Header("Actions")]
     public static Action EnableSmithyWindow;
     public static Action generateItemRequire;
-
+    public static Action<bool> OpenedSmithyWindow;
     private void Start()
     {
         InitializeSettings();
@@ -141,6 +142,7 @@ public class BlackSmithInteraction : UIRequirementDisplay
 
             EnableSmithyWindow?.Invoke();
             generateItemRequire?.Invoke();//UISelectedButton
+            OpenedSmithyWindow?.Invoke(true);
             Debug.Log("Mở ShopWindow");
             WindowShopPanel.gameObject.SetActive(true);
 
@@ -160,6 +162,7 @@ public class BlackSmithInteraction : UIRequirementDisplay
     {
         TooltipManager.Instance.HideTooltip();
         WindowShopPanel.gameObject.SetActive(false);
+        OpenedSmithyWindow?.Invoke(false);
     }
 
     public void OnButtonCraftPressed()

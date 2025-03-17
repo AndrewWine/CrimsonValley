@@ -36,8 +36,7 @@ public class InventoryManager : MonoBehaviour
     {
         // Đăng ký sự kiện khi Object được bật
 
-        if (Tree.onPickupWood != null)
-            Tree.onPickupWood += PickUpItemCallBack;
+
 
         if (Cage.GiveItemToPlayer != null)
             Cage.GiveItemToPlayer += PickUpItemCallBack;
@@ -47,7 +46,6 @@ public class InventoryManager : MonoBehaviour
     {
         // Hủy đăng ký sự kiện khi Object bị tắt
         CropTile.onCropHarvested -= PickUpItemCallBack;
-        Tree.onPickupWood -= PickUpItemCallBack;
         Cage.GiveItemToPlayer -= PickUpItemCallBack;
     }
 
@@ -57,7 +55,6 @@ public class InventoryManager : MonoBehaviour
         if (inventory != null && inventoryDisplay != null)
         {
             inventory.AddItemByName(itemName, amount);
-            inventoryDisplay.UpdateDisplay(inventory);
             SaveInventory();
             Debug.Log($"Đã thêm item {itemName} số lượng {amount}");
         }
@@ -65,6 +62,8 @@ public class InventoryManager : MonoBehaviour
         {
             Debug.LogError("inventory hoặc inventoryDisplay là null!");
         }
+        inventoryDisplay.UpdateDisplay(inventory);
+
     }
 
     private void ConfigureInventoryDisplay()

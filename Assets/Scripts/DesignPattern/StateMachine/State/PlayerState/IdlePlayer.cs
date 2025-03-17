@@ -28,37 +28,42 @@ public class IdleStatePlayer : PlayerState
             stateMachine.ChangeState(blackboard.moveState);
         }
 
-        else if(blackboard.sowButtonPressed && blackboard.seed != null)
+        else if (blackboard.sowButtonPressed && blackboard.seed != null)
         {
             stateMachine.ChangeState(blackboard.sowState);
         }
 
-        else if(blackboard.harvestButtonPress)
+        else if (blackboard.harvestButtonPress)
         {
             stateMachine.ChangeState(blackboard.harvestState);
 
         }
-        
-        else if(blackboard.waterButtonPressed)
+
+        else if (blackboard.waterButtonPressed)
         {
             stateMachine.ChangeState(blackboard.waterState);
         }
-        else if(blackboard.hoeButtonPressed)
+        else if (blackboard.hoeButtonPressed)
         {
             stateMachine.ChangeState(blackboard.hoeState);
         }
-        else if(blackboard.cutButtonPressed)
+        else if (blackboard.cutButtonPressed)
         {
             stateMachine.ChangeState(blackboard.cutState);
         }
-        else if(blackboard.miningButtonPressed)
+        else if (blackboard.miningButtonPressed)
         {
             stateMachine.ChangeState(blackboard.miningState);
         }
-        else if(blackboard.jumpButtonPressed)
+        else if (blackboard.jumpButtonPressed)
         {
             stateMachine.ChangeState(blackboard.jumpState);
+        }
+        else if( blackboard.sleepButtonPressed)
+        {
+            stateMachine.ChangeState(blackboard.sleepState);
 
         }
+
     }
 }
