@@ -11,6 +11,8 @@ public class NoneTool : MonoBehaviour
     [SerializeField] private GameObject HoeTool;
     [SerializeField] private GameObject AxeTool;
     [SerializeField] private GameObject HammerTool;
+    [SerializeField] private GameObject Pickaxe;
+    [SerializeField] private GameObject Shovel;
 
 
 
@@ -36,6 +38,9 @@ public class NoneTool : MonoBehaviour
             HoeTool.SetActive(false);
             AxeTool.SetActive(false);
             HammerTool.SetActive(false);
+            Pickaxe.SetActive(false);
+            Shovel.SetActive(false);
+
         }
         else
         {
@@ -43,6 +48,8 @@ public class NoneTool : MonoBehaviour
             HoeTool.SetActive(true);
             AxeTool.SetActive(true);
             HammerTool.SetActive(true);
+            Pickaxe.SetActive(true);
+            Shovel.SetActive(true);
         }
 
     }

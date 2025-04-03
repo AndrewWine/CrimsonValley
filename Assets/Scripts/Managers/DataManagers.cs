@@ -30,6 +30,8 @@ public class DataManagers : MonoBehaviour
     }
 
 
+
+
     public ItemData GetItemPriceByName(string itemName)
     {
         foreach (var data in itemDataArray)

@@ -33,6 +33,7 @@ public class CuttingAbility : MonoBehaviour
         {
             PlayerStatusManager.Instance.UseStamina(1); // Mỗi lần dùng công cụ trừ 10 Stamina
             targetTree.TakeDamage(blackBoard.Axedamage);
+            
         }
         else
         {
@@ -43,20 +44,11 @@ public class CuttingAbility : MonoBehaviour
     // Kiểm tra xem có đối tượng nào trong vùng trigger không
     private void OnTriggerStay(Collider other)
     {
-        Debug.Log($"Detected: {other.gameObject.name}"); // Kiểm tra va chạm với đối tượng nào
 
         if (other.CompareTag("Tree"))
         {
             targetTree = other.GetComponent<Tree>();
-
-            if (targetTree != null)
-            {
-                Debug.Log($"Tree detected: {other.gameObject.name}");
-            }
-            else
-            {
-                Debug.LogWarning("TreeChopping component NOT found on Tree!");
-            }
+        
         }
     }
 

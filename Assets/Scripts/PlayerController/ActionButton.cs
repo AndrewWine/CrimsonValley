@@ -23,6 +23,8 @@ public class ActionButton : MonoBehaviour
     public static Action Hoeing;//HoeAbility
     public static Action Cutting;//HoeAbility
     public static Action Building;//HoeAbility
+    public static Action Shoveling;//HoeAbility
+
 
     private void Start()
     {
@@ -36,20 +38,20 @@ public class ActionButton : MonoBehaviour
         actionButton.onClick.AddListener(DoAction);
 
         // Đăng ký các sự kiện từ CheckCropFieldState
-        CheckCropFieldState.EnableSowBTTN += EnableSowButton;
-        CheckCropFieldState.EnableWaterBTTN += EnableWaterButton;
-        CheckCropFieldState.EnableHarvestBTTN += EnableHarvestButton;
-        CheckCropFieldState.EnableSleepBTTN += EnableSleepButton;
+        CheckGameObject.EnableSowBTTN += EnableSowButton;
+        CheckGameObject.EnableWaterBTTN += EnableWaterButton;
+        CheckGameObject.EnableHarvestBTTN += EnableHarvestButton;
+        CheckGameObject.EnableSleepBTTN += EnableSleepButton;
 
     }
 
     private void OnDestroy()
     {
         // Hủy đăng ký sự kiện khi object bị phá hủy (tránh memory leak)
-        CheckCropFieldState.EnableSowBTTN -= EnableSowButton;
-        CheckCropFieldState.EnableWaterBTTN -= EnableWaterButton;
-        CheckCropFieldState.EnableHarvestBTTN -= EnableHarvestButton;
-        CheckCropFieldState.EnableSleepBTTN -= EnableSleepButton;
+        CheckGameObject.EnableSowBTTN -= EnableSowButton;
+        CheckGameObject.EnableWaterBTTN -= EnableWaterButton;
+        CheckGameObject.EnableHarvestBTTN -= EnableHarvestButton;
+        CheckGameObject.EnableSleepBTTN -= EnableSleepButton;
     }
 
     public void DoAction()
@@ -73,6 +75,14 @@ public class ActionButton : MonoBehaviour
             blackBoard.miningButtonPressed = true;
             Debug.Log("domining");
         }
+
+        else if (playerToolSelector.activeTool == PlayerToolSelector.Tool.Shovel)
+        {
+            Shoveling?.Invoke();//ShovelAbility
+            Debug.Log("do Shovel");
+        }
+
+
 
     }
 
@@ -106,5 +116,10 @@ public class ActionButton : MonoBehaviour
     public void OnJumpButtonPressed()
     {
         blackBoard.jumpButtonPressed = true;    
+    }
+
+    public void OnShovelButtonPressed()
+    {
+        blackBoard.shovelButtonPressed = true;
     }
 }

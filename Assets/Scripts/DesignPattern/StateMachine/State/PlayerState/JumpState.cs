@@ -35,9 +35,6 @@ public class JumpState : PlayerState
     public override void LogicUpdate()
     {
         base.LogicUpdate();
-        if (joystick != null && joystick.GetMoveVector().magnitude > 0.1f)
-        {
-            stateMachine.ChangeState(blackboard.moveState);
-        }
+        
     }
 }

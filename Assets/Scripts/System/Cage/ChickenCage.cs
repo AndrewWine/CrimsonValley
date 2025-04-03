@@ -2,10 +2,24 @@
 
 public class ChickenCage : Cage
 {
-    protected override void start()
+    public override void HandleFeeding(int nutrition)
     {
-        feedingTimer = 200;  // Gán giá trị mặc định cho gà
-        harvestTimer = 2000;
-        base.start();
+        base.HandleFeeding(nutrition);
+        AudioManager.instance.PlaySFX(1, CagePos);
+
+    }
+
+    public override void HarvestItem()
+    {
+        base.HarvestItem();
+        AudioManager.instance.PlaySFX(1, CagePos);
+
+    }
+
+    public override void ResetHarvestTimer()
+    {
+        base.ResetHarvestTimer();
+        AudioManager.instance.PlaySFX(1, CagePos);
+
     }
 }

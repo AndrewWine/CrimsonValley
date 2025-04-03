@@ -7,7 +7,6 @@ public class SowState : PlayerState
     {
         base.Enter();
         // Bật một trigger để kiểm tra animation kết thúc
-        PlayerStatusManager.Instance.UseStamina(1); // Mỗi lần dùng công cụ trừ 10 Stamina
         blackboard.animator.Play("Sow");
     }
 
@@ -20,19 +19,9 @@ public class SowState : PlayerState
     {
         blackboard.sowButtonPressed = false;
 
-        CropField currentCropField = FindObjectOfType<CheckCropFieldState>()?.GetCurrentCropField();
+        CropField currentCropField = FindObjectOfType<CheckGameObject>()?.GetCurrentCropField();
 
-        if (currentCropField == null)
-        {
-            Debug.LogError("Không tìm thấy ô đất để gieo trồng!");
-            return;
-        }
-
-        if (currentCropField.state != TileFieldState.Empty)
-        {
-            Debug.LogError("Ô đất không trống!");
-            return;
-        }
+       
 
         currentCropField.Sow(blackboard.seed);
         stateMachine.ChangeState(blackboard.idlePlayer); // Sau khi gieo hạt xong, chuyển về trạng thái idle

@@ -6,6 +6,8 @@ public class EquipItem : MonoBehaviour
 {
     private PlayerStatusManager playerStatusManager;
     private ListEquipment listEquipment;
+    [SerializeField] private InventoryManager inventoryManager;
+
     [SerializeField] private GameObject placeAxeTool;
     [SerializeField] private GameObject placePickaxeTool;
 
@@ -14,8 +16,18 @@ public class EquipItem : MonoBehaviour
         playerStatusManager = GetComponent<PlayerStatusManager>();
         listEquipment = GetComponent<ListEquipment>();
         TooltipManager.NotifyEquipItem += Equip;
+        Tree.reduceDurability += ReduceAxeDurability;
+        OreRock.decreasedPickAxeDurability += ReduceAxeDurability;
+
     }
 
+    private void OnDisable()
+    {
+        TooltipManager.NotifyEquipItem -= Equip;
+        Tree.reduceDurability -= ReduceAxeDurability;
+        OreRock.decreasedPickAxeDurability -= ReduceAxeDurability;
+
+    }
     public void Equip(ItemData itemData)
     {
         if (itemData == null)
@@ -149,4 +161,69 @@ public class EquipItem : MonoBehaviour
                 playerStatusManager.RemovePickaxeDamage(itemDamage);
         }
     }
+
+    public void ReducePickaxeDurability()
+    {
+        ItemData pickaxeEquip = ListEquipment.Instance?.GetEquippedItemByEquipType(EquipType.Pickaxe);
+
+        if (pickaxeEquip != null && pickaxeEquip.equipType == EquipType.Pickaxe)
+        {
+            if (pickaxeEquip.durability > 0)
+            {
+                pickaxeEquip.durability -= 1;
+                Debug.LogWarning($"Durability of {pickaxeEquip.itemName} decreased to {pickaxeEquip.durability}");
+            }
+
+            if (pickaxeEquip.durability <= 0)
+            {
+                Debug.Log($"{pickaxeEquip.itemName} is broken!");
+
+                // Gỡ trang bị
+                UnEquip(pickaxeEquip);
+
+                // Kiểm tra số lượng trước khi xóa
+                Inventory inventory = InventoryManager.Instance.GetInventory();
+                if (inventory != null && inventory.GetItemCountByName(pickaxeEquip.itemName) > 0)
+                {
+                    inventory.RemoveItemByName(pickaxeEquip.itemName, 1);
+
+                }
+
+
+            }
+        }
+    }
+
+    public void ReduceAxeDurability()
+    {
+        ItemData axeEquip = ListEquipment.Instance?.GetEquippedItemByEquipType(EquipType.Axe);
+
+        if (axeEquip != null && axeEquip.equipType == EquipType.Axe)
+        {
+            if (axeEquip.durability > 0)
+            {
+                axeEquip.durability -= 1;
+                Debug.LogWarning($"Durability of {axeEquip.itemName} decreased to {axeEquip.durability}");
+            }
+
+            if (axeEquip.durability <= 0)
+            {
+                Debug.Log($"{axeEquip.itemName} is broken!");
+
+                // Gỡ trang bị
+                UnEquip(axeEquip);
+
+                // Kiểm tra số lượng trước khi xóa
+                Inventory inventory = InventoryManager.Instance.GetInventory();
+                if (inventory != null && inventory.GetItemCountByName(axeEquip.itemName) > 0)
+                {
+                    inventory.RemoveItemByName(axeEquip.itemName, 1);
+                }
+
+            }
+        }
+    }
+
+
+
 }

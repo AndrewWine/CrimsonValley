@@ -13,8 +13,12 @@ public class EntityStateMachine<TBlackboard> : MonoBehaviour where TBlackboard :
     {
         if (blackboard == null)
         {
-            Debug.LogError("Blackboard is not assigned.");
-            return;
+            blackboard = GetComponent<TBlackboard>();
+        }
+
+        if (blackboard == null)
+        {
+            Debug.LogError($"{gameObject.name}: Blackboard vẫn NULL sau khi GetComponent!", this);
         }
 
         if (StartingState == null)

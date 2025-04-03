@@ -17,6 +17,8 @@ TagManager:
   - FarmArea
   - bed
   - Indoor
+  - House
+  - Decore
   layers:
   - Default
   - TransparentFX

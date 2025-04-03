@@ -1,5 +1,6 @@
 ﻿using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using static UnityEditor.Progress;
 
 public class InventoryDisplay : MonoBehaviour
@@ -22,6 +23,16 @@ public class InventoryDisplay : MonoBehaviour
         }
     }
 
+    private void OnEnable()
+    {
+        Inventory.NotifyUpdateInventoryDisplay += UpdateDisplay;
+    }
+
+    private void OnDisable()
+    {
+        Inventory.NotifyUpdateInventoryDisplay -= UpdateDisplay;
+
+    }
     public void UpdateDisplay(Inventory inventory)
     {
         InventoryItem[] items = inventory.GetInventoryItems();

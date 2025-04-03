@@ -1,79 +1,72 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using UnityEngine;
-using System;
 
-public class Tree : Item, IDamageAble
+public class Tree : MonoBehaviour, IDamageAble
 {
     [Header("Elements")]
-    [SerializeField] private GameObject TopTree;
-    [SerializeField] private GameObject TrunkTree;
-    [SerializeField] private ItemData itemData;
+    [SerializeField] private GameObject topTree;
+    [SerializeField] private GameObject trunkTree;
     [SerializeField] private ParticleSystem woodParticles;
-    [SerializeField] private InventoryManager inventoryManager;
     [SerializeField] private Rigidbody rbTopTree;
     [SerializeField] private Collider trunkCollider;
-
+    public ItemData itemData;
     [Header("Settings")]
-    [SerializeField] private float TopTreeHealth;
-    [SerializeField] private float TrunkTreeHealth;
-    [SerializeField] private int dropAmount;
+    [SerializeField] private float topTreeHealth = 10f;
+    [SerializeField] private float trunkTreeHealth = 10f;
+    [SerializeField] private int dropAmount = 3;
 
+    [Header("Actions")]
+    public static Action reduceDurability;
 
-
-    [SerializeField] private bool isTopTree;
-    private bool isPlayingParticles = false; // Ngăn việc bật/tắt liên tục
+    private InventoryManager inventoryManager;
+    private bool isTopTree = true;
+    private bool isPlayingParticles = false;
 
     private void Start()
     {
-        // Tìm GameObject có tên "InventoryManager" rồi lấy component InventoryManager
-        GameObject inventoryObj = GameObject.Find("InventoryManager");
-        if (inventoryObj != null)
+        
+        inventoryManager = FindObjectOfType<InventoryManager>();
+        if (inventoryManager == null)
         {
-            inventoryManager = inventoryObj.GetComponent<InventoryManager>();
-        }
-        else
-        {
-            Debug.LogError("InventoryManager không được tìm thấy!");
+            Debug.LogError(" Không tìm thấy InventoryManager!");
         }
 
-        InitializedStats();
+        InitializeTree();
     }
 
-
-   
     private void Update()
     {
-        if (TopTreeHealth <= 0 && isTopTree)
+        if (isTopTree && topTreeHealth <= 0)
         {
             ExecuteTopTree();
         }
-        if (TrunkTreeHealth <= 0 && !isTopTree)
+        else if (!isTopTree && trunkTreeHealth <= 0)
         {
             ExecuteTrunkTree();
         }
     }
 
-    private void InitializedStats()
+    private void InitializeTree()
     {
-        isTopTree = true;
-        TopTree.SetActive(true);
-        TrunkTree.SetActive(true);
+        topTree.SetActive(true);
+        trunkTree.SetActive(true);
         rbTopTree.isKinematic = true;
-        trunkCollider.isTrigger = true; // Ban đầu không thể va chạm
+        trunkCollider.isTrigger = true;
         woodParticles.gameObject.SetActive(false);
     }
 
     private void ExecuteTopTree()
     {
-        PlayParticles(); // Sử dụng hàm kiểm tra trước khi bật
-
+        AudioManager.instance.PlaySFX(6,null);
+        PlayParticles();
         rbTopTree.isKinematic = false;
-        rbTopTree.AddForce(Vector3.right * 0.5f, ForceMode.Impulse); // Đẩy cây ngã
-        PickedWood();
+        rbTopTree.AddForce(Vector3.right * 0.5f, ForceMode.Impulse);
+        DropWood();
         isTopTree = false;
         StartCoroutine(EnableTrunkPhysics());
 
-        Destroy(TopTree, 3.5f); // Xóa phần ngọn sau 2 giây
+        Destroy(topTree, 3.5f);
     }
 
     private IEnumerator EnableTrunkPhysics()
@@ -84,54 +77,57 @@ public class Tree : Item, IDamageAble
 
     private void ExecuteTrunkTree()
     {
-        PlayParticles(); // Sử dụng hàm kiểm tra trước khi bật
+        PlayParticles();
+        trunkTree.SetActive(false);
+        DropWood();
 
-        TrunkTree.SetActive(false);
-        PickedWood();
+        // Gửi sự kiện cây bị phá hủy
+        EventBus.Publish(new TreeDestroyedEvent(transform.position));
 
         Destroy(gameObject);
     }
 
-    private void PickedWood()
+
+    private void DropWood()
     {
         woodParticles.transform.parent = null;
-      
-        inventoryManager.PickUpItemCallBack(itemData.itemName, dropAmount);
-
+        inventoryManager?.PickUpItemCallBack(itemData.itemName, dropAmount);
     }
 
     private void PlayParticles()
     {
-        if (!isPlayingParticles) // Kiểm tra nếu hạt chưa được kích hoạt
+        if (!isPlayingParticles)
         {
             isPlayingParticles = true;
             woodParticles.gameObject.SetActive(true);
             woodParticles.Play();
-            Invoke("DisableParticles", 1f); // Để 1.5s trước khi tắt
+            Invoke(nameof(DisableParticles), 1f);
         }
     }
 
     private void DisableParticles()
     {
         woodParticles.gameObject.SetActive(false);
-        isPlayingParticles = false; // Reset lại trạng thái
+        isPlayingParticles = false;
     }
 
-    public void TakeDamage(float target)
+    public void TakeDamage(float damage)
     {
+        reduceDurability?.Invoke();
+        AudioManager.instance.PlaySFX(0, null);
         if (isTopTree)
         {
             ShakeTree();
-            TopTreeHealth -= target;
+            topTreeHealth -= damage;
         }
         else
         {
-            TrunkTreeHealth -= target;
+            trunkTreeHealth -= damage;
         }
     }
 
     private void ShakeTree()
     {
-        LeanTween.rotate(gameObject, new Vector3(0.2f, 0f, 0.2f), 0.09f).setLoopPingPong(1);
+        LeanTween.rotate(gameObject, new Vector3(0.1f, 0f, 0.05f), 0.0001f).setLoopPingPong(1);
     }
 }

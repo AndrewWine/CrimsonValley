@@ -430,6 +430,7 @@ GameObject:
   - component: {fileID: 111685422993894489}
   - component: {fileID: 4935498623877126914}
   - component: {fileID: 1578278777632966750}
+  - component: {fileID: -4895188207570773470}
   m_Layer: 0
   m_Name: CowCage
   m_TagString: Cage
@@ -487,15 +488,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   state: 0
+  CagePos: {fileID: 8458506968853110772}
   itemDrop: {fileID: 11400000, guid: 8236808f68cb6df43bcadbdb4c105477, type: 2}
-  nutrition: 0
-  harvestTimer: 10
-  slot: 0
-  feedingTimer: 0
-  DigestionTime: 10
   dropAmount: 1
-  quantity: 0
-  nameOfMaterial: 
+  nutritionValue: 50
+  harvestDuration: 600
+  digestionTime: 100
+  timeUntilHarvest: 0
+  feedingTimer: 0
 --- !u!54 &1578278777632966750
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -523,6 +523,19 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &-4895188207570773470
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1367669966846542539}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cadf4ed7de8ea244e88a0bb0e1865018, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  buildingData: {fileID: 11400000, guid: 8f7db2cb02b9de842a48b88e148d3693, type: 2}
 --- !u!1 &1413024711021257921
 GameObject:
   m_ObjectHideFlags: 0

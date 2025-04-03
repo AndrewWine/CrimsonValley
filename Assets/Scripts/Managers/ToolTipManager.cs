@@ -62,7 +62,7 @@ public class TooltipManager : MonoBehaviour
     {
         if (currentItemData != null)
         {
-            NotifyEquipItem?.Invoke(currentItemData);
+            NotifyEquipItem?.Invoke(currentItemData);//EquipItem
             Debug.Log("EquipItem equiptype " + currentItemData.equipType);
         }
         else

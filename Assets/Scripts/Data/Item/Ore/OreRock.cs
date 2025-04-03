@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-
+using System;
 public class OreRock : MonoBehaviour, IDamageAble
 {
     [Header("Ore Properties")]
@@ -9,6 +9,9 @@ public class OreRock : MonoBehaviour, IDamageAble
     private float currentHealth;
 
     private Vector3 originalPosition;
+
+    [Header("Actions")]
+    public static Action decreasedPickAxeDurability;
 
     [System.Serializable]
     public struct DropItem
@@ -31,10 +34,23 @@ public class OreRock : MonoBehaviour, IDamageAble
     {
         currentHealth -= damage;
         PlayerStatusManager.Instance.UseStamina(1);
+        decreasedPickAxeDurability?.Invoke();// EquipItem
+        ShakeEffect();
+        // Lấy item Pickaxe nếu đang được trang bị
+        ItemData equippedItem = ListEquipment.Instance?.GetEquippedItemByEquipType(EquipType.Pickaxe);
 
-        StartCoroutine(ShakeEffect());
+        if (equippedItem != null)
+        {
+            equippedItem.durability -= 1;
+           // Debug.Log($"{equippedItem.itemName} durability giảm xuống: {equippedItem.durability}");
 
-  
+            // Nếu durability <= 0, gỡ item khỏi trang bị
+            if (equippedItem.durability <= 0)
+            {
+                ListEquipment.Instance.RemoveItem(equippedItem);
+                Debug.Log($"{equippedItem.itemName} đã bị hỏng và bị gỡ khỏi trang bị!");
+            }
+        }
 
         if (currentHealth <= 0)
         {
@@ -66,7 +82,7 @@ public class OreRock : MonoBehaviour, IDamageAble
         ObjectPool.Instance.StartCoroutine(RespawnOre());
     }
 
-    private IEnumerator ShakeEffect()
+    private void ShakeEffect()
     {
         Vector3 originalPos = transform.position;
         float elapsedTime = 0f;
@@ -74,11 +90,11 @@ public class OreRock : MonoBehaviour, IDamageAble
 
         while (elapsedTime < duration)
         {
-            float x = Random.Range(-0.1f, 0.1f);
-            float y = Random.Range(-0.1f, 0.1f);
+            float x = UnityEngine.Random.Range(-0.1f, 0.1f);
+            float y = UnityEngine.Random.Range(-0.1f, 0.1f);
             transform.position = originalPos + new Vector3(x, y, 0);
             elapsedTime += Time.deltaTime;
-            yield return null;
+
         }
 
         transform.position = originalPos;
@@ -102,7 +118,7 @@ public class OreRock : MonoBehaviour, IDamageAble
 
     private DropItem? GetRandomDrop()
     {
-        float randomValue = Random.Range(0f, 100f);
+        float randomValue = UnityEngine.Random.Range(0f, 100f);
         float cumulativeProbability = 0f;
 
         foreach (var drop in dropTable)

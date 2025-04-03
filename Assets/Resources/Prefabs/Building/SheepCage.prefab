@@ -95,6 +95,7 @@ GameObject:
   - component: {fileID: 8277250466036421919}
   - component: {fileID: 8916794705873230622}
   - component: {fileID: 5573242301639637383}
+  - component: {fileID: -2728567686351644407}
   m_Layer: 0
   m_Name: SheepCage
   m_TagString: Cage
@@ -133,14 +134,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   state: 0
   itemDrop: {fileID: 11400000, guid: 0c1ee3019bfd71c48b1e7fd4cdb3a1b1, type: 2}
-  nutrition: 10
-  harvestTimer: 20
-  slot: 0
-  feedingTimer: 10
-  DigestionTime: 10
   dropAmount: 0
-  quantity: 0
-  nameOfMaterial: 
+  nutritionValue: 0
+  harvestDuration: 0
+  digestionTime: 10
+  timeUntilHarvest: 0
+  feedingTimer: 70
 --- !u!65 &8916794705873230622
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -189,6 +188,19 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &-2728567686351644407
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2270841197249015843}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cadf4ed7de8ea244e88a0bb0e1865018, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  buildingData: {fileID: 11400000, guid: 99084a3051619e648aa49045730f829c, type: 2}
 --- !u!1 &3336530648620929511
 GameObject:
   m_ObjectHideFlags: 0
@@ -407,7 +419,11 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 7158223160976028390, guid: e90d11b037c3d99498fc7473b47d8d70,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1439656812941523957}
   m_SourcePrefab: {fileID: 100100000, guid: e90d11b037c3d99498fc7473b47d8d70, type: 3}
 --- !u!4 &2889514480988822479 stripped
 Transform:
@@ -415,6 +431,27 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 3922067626757534443}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &6141473585967005709 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7158223160976028390, guid: e90d11b037c3d99498fc7473b47d8d70,
+    type: 3}
+  m_PrefabInstance: {fileID: 3922067626757534443}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1439656812941523957
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6141473585967005709}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d6e89bbe8f01429479998e22647b8f22, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  aniamalPos: {fileID: 2889514480988822479}
+  minDelay: 2
+  maxDelay: 5
 --- !u!1001 &5440497465752195695
 PrefabInstance:
   m_ObjectHideFlags: 0

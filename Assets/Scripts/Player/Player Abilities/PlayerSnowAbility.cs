@@ -22,14 +22,14 @@ public class PlayerSnowAbility : MonoBehaviour
         blackBoard = GetComponentInParent<PlayerBlackBoard>();
         playerToolSelector.onToolSelected += ToolSelectedCallBack;
         SeedUI.SetActive(false);
-        CheckCropFieldState.UnlockCropField += UnlockCropFieldHandler;
+        CheckGameObject.UnlockCropField += UnlockCropFieldHandler;
         UISelectButton.seedButtonPressed += SelectSeeds;
     }
 
     private void OnDisable()
     {
         playerToolSelector.onToolSelected -= ToolSelectedCallBack;
-        CheckCropFieldState.UnlockCropField -= UnlockCropFieldHandler;
+        CheckGameObject.UnlockCropField -= UnlockCropFieldHandler;
         UISelectButton.seedButtonPressed -= SelectSeeds;
 
     }

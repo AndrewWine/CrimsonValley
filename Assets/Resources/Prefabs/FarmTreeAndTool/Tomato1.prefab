@@ -48,6 +48,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cropRenderer: {fileID: 6260870840355605662}
   harvestedParticles: {fileID: 3004082738356912281}
+  TimeToGrowUp: 20
 --- !u!1 &9119927911932628702
 GameObject:
   m_ObjectHideFlags: 0

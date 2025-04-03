@@ -161,9 +161,6 @@ public class UISelectButton : MonoBehaviour
             clickedBorder.gameObject.SetActive(isActive);
             Debug.Log($"🔹 ClickedBorder của {item.itemName} đã {(isActive ? "bật" : "tắt")}");
         }
-        else
-        {
-            Debug.LogError($"Không tìm thấy ClickedBorder cho {item.itemName}");
-        }
+      
     }
 }

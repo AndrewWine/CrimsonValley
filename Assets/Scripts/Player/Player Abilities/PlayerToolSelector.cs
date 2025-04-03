@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class PlayerToolSelector : MonoBehaviour
 {
-    public enum Tool { None, Sow, Hoe, Axe, Hammer, Pickaxe }
+    public enum Tool { None, Sow, Hoe, Axe, Hammer, Pickaxe, Shovel}
     public Tool activeTool;
 
     [Header("Elements")]
@@ -82,4 +82,10 @@ public class PlayerToolSelector : MonoBehaviour
     {
         return activeTool == Tool.Pickaxe;
     }
+
+    public bool CanShovel()
+    {
+        return activeTool == Tool.Shovel;
+    }
+
 }

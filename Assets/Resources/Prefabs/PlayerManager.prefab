@@ -61,6 +61,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   blackboard: {fileID: 0}
+  listEquipment: {fileID: 2974415020003767628}
 --- !u!114 &2974415020003767628
 MonoBehaviour:
   m_ObjectHideFlags: 0

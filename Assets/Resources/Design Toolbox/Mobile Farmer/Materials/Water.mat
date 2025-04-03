@@ -91,7 +91,7 @@ Material:
     - _ClearCoatSmoothness: 0
     - _Cull: 2
     - _Cutoff: 0.5
-    - _Density: 2000
+    - _Density: 10
     - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
@@ -111,7 +111,7 @@ Material:
     - _Smoothness: 0
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 0
-    - _Speed: 2
+    - _Speed: -2
     - _SrcBlend: 1
     - _SrcBlendAlpha: 1
     - _Step: 0.74

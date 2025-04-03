@@ -8,4 +8,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/MyLittleFarm/Scenes/SampleScene.unity
     guid: 99c9720ab356a0642a771bea13969a05
+  - enabled: 1
+    path: Assets/MyLittleFarm/Scenes/MainMenu.unity
+    guid: 9989537102709dc43817cc2c82136b41
+  - enabled: 1
+    path: Assets/MyLittleFarm/Scenes/Main.unity
+    guid: 499036fff1987b64d99d564aedb7e854
   m_configObjects: {}

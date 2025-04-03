@@ -1,4 +1,4 @@
-﻿using System.Collections;
+﻿    using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -37,7 +37,7 @@ public class WaterState : PlayerState
     {
         blackboard.animator.Play("Watering");
         // Lấy CropField duy nhất mà người chơi đang va chạm
-        CropField currentCropField = FindObjectOfType<CheckCropFieldState>().GetCurrentCropField();
+        CropField currentCropField = FindObjectOfType<CheckGameObject>().GetCurrentCropField();
 
         // Chỉ gieo hạt cho CropField mà người chơi đang va chạm và có trạng thái Empty
         if (currentCropField != null && currentCropField.state == TileFieldState.Sown)

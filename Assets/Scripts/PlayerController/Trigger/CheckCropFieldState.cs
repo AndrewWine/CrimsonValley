@@ -2,7 +2,7 @@
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
-public class CheckCropFieldState : MonoBehaviour
+public class CheckGameObject : MonoBehaviour
 {
     [Header("Actions")]
     public static Action<bool> EnableSowBTTN;
@@ -18,6 +18,10 @@ public class CheckCropFieldState : MonoBehaviour
     private OreRock ore;
     private LineRenderer lineRenderer;
     private PlayerBlackBoard blackBoard;
+    public bool buildingGameObject;
+    public bool cropTile;
+
+    public GameObject currentGameObject;
     private void Start()
     {
         // Tạo LineRenderer nếu chưa có
@@ -32,23 +36,28 @@ public class CheckCropFieldState : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log(" Đã vào trigger với: " + other.gameObject.name);
-
         if (other.CompareTag("Croptile"))
         {
             CropField cropField = other.GetComponent<CropField>();
+
             if (cropField != null)
             {
                 if (currentCropField == null)
                 {
                     currentCropField = cropField;
-                    UnlockCropField?.Invoke(true);
+                    currentGameObject = currentCropField.gameObject;
+                    cropTile = true;
+
+                    //UnlockCropField?.Invoke(true);
                 }
 
                 UpdateButtons(cropField.state, true);
                 DrawOutline(cropField); // Vẽ outline khi bật UIButton
             }
-            cropFieldDetected?.Invoke(cropField);
+            cropFieldDetected?.Invoke(cropField);//HoeAbility
+           
+         
+
         }
 
         else if(other.CompareTag("Ore"))
@@ -64,7 +73,16 @@ public class CheckCropFieldState : MonoBehaviour
             EnableSleepBTTN?.Invoke(true);
 
         }
+
+        else if( other.CompareTag("Cage") || other.CompareTag("Decore"))
+        {
+            buildingGameObject = true;
+            currentGameObject = other.gameObject;
+
+        }
     }
+
+
 
     private void OnTriggerExit(Collider other)
     {
@@ -74,11 +92,14 @@ public class CheckCropFieldState : MonoBehaviour
             if (cropField == currentCropField)
             {
                 currentCropField = null;
-                UnlockCropField?.Invoke(false);
+                //UnlockCropField?.Invoke(false);
                 UpdateButtons(TileFieldState.Empty, false);
+
 
                 lineRenderer.enabled = false; // Tắt outline khi rời đi
             }
+            cropTile = false;
+            currentGameObject = null;
         }
     
 
@@ -86,6 +107,13 @@ public class CheckCropFieldState : MonoBehaviour
         {
             changeCameraAngel?.Invoke(false);
             EnableSleepBTTN?.Invoke(false);
+
+        }
+
+        else if ( other.CompareTag("Cage") || other.CompareTag("Decore"))
+        {
+            buildingGameObject = false;
+            currentGameObject = null;
 
         }
     }

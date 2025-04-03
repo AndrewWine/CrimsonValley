@@ -63,7 +63,6 @@ public class HoeAbility : MonoBehaviour
         if (other.CompareTag("FarmArea"))
         {
             canHoe = true;
-
             // Lấy bán kính từ BoxCollider của hoeSphere
             BoxCollider boxCollider = hoeSphere.GetComponent<BoxCollider>();
             Vector3 checkSize = boxCollider != null ? boxCollider.size * 0.5f : Vector3.one * 0.5f;
@@ -96,34 +95,68 @@ public class HoeAbility : MonoBehaviour
         if (other.CompareTag("FarmArea"))
         {
             blackboard.isGround = false;
+
         }
     }
 
 
     private void CreateCropfield()
     {
-        if (canHoe)
+        if (!canHoe) return; // Không thể cuốc đất thì thoát ngay
+
+        if (CropFieldPrefab == null)
         {
-            // Làm tròn vị trí để khớp lưới
-            float tileSize = 1.0f;
-            Vector3 snappedPosition = new Vector3(
-                Mathf.Round(lowerPosition.x / tileSize) * tileSize,
-                lowerPosition.y,
-                Mathf.Round(lowerPosition.z / tileSize) * tileSize
-            );
-
-            // Nếu vị trí này chưa có CropTile, tạo mới
-            if (!IsPositionOccupied(snappedPosition))
-            {
-                Instantiate(CropFieldPrefab, snappedPosition, Quaternion.identity);
-            }
-
-            PlayerStatusManager.Instance.UseStamina(2); // Mỗi lần dùng công cụ trừ 2 Stamina
-
+            Debug.LogError(" CropFieldPrefab bị null! Kiểm tra Prefab trong Inspector.");
+            return;
         }
+
+        // Lấy vị trí cuối cùng của LineRenderer (góc trước của HoeColider)
+        Vector3 targetPosition = lineRenderer.GetPosition(lineRenderer.positionCount - 1);
+
+        // Giữ nguyên Y từ lowerPosition để đảm bảo đúng mặt đất
+        float tileSize = 1.0f;
+        Vector3 snappedPosition = new Vector3(
+            Mathf.Round(targetPosition.x / tileSize) * tileSize,
+            lowerPosition.y, // Giữ nguyên Y
+            Mathf.Round(targetPosition.z / tileSize) * tileSize
+        );
+
+        // Kiểm tra xem vị trí này đã có CropTile chưa
+        if (IsPositionOccupied(snappedPosition))
+        {
+            Debug.Log(" Vị trí đã có CropTile, không thể tạo mới.");
+            return;
+        }
+
+        // Instantiate CropField
+        GameObject newCropField = Instantiate(CropFieldPrefab, snappedPosition, Quaternion.identity);
+
+        if (newCropField == null)
+        {
+            Debug.LogError(" Lỗi khi Instantiate CropFieldPrefab, đối tượng bị null!");
+            return;
+        }
+
+        // Lấy component Item từ đối tượng vừa Instantiate
+        Item itemComponent = newCropField.GetComponent<Item>();
+
+        if (itemComponent == null)
+        {
+            Debug.LogError(" CropFieldPrefab KHÔNG có component Item! Kiểm tra Prefab.");
+            return;
+        }
+
+        // Gửi sự kiện EventBus
+        EventBus.Publish(new ItemPlacedEvent(itemComponent));
+        Debug.Log(" Đã gửi sự kiện ItemPlacedEvent cho: " + itemComponent.name);
+
+        // Tiêu hao stamina
+        PlayerStatusManager.Instance.UseStamina(2);
     }
 
- 
+
+
+
 
 
 
@@ -162,38 +195,43 @@ public class HoeAbility : MonoBehaviour
     {
         if (HoeColider == null || lineRenderer == null) return;
 
-        // Lấy vị trí gốc của Box Collider
-        Vector3 colliderCenter = HoeColider.center;
-        Vector3 colliderSize = HoeColider.size * 0.5f; // Lấy 1/2 kích thước
-
-        // Lấy giá trị Y cố định (giữ nguyên Y của hoeSphere)
+        Vector3 colliderSize = new Vector3(HoeColider.size.x * 0.5f, HoeColider.size.y * 0.01f, HoeColider.size.z * 0.5f);
         float fixedY = hoeSphere.position.y;
 
-        // Đảm bảo LineRenderer theo đúng hoeSphere
-        lineRenderer.transform.position = hoeSphere.position;
-        lineRenderer.transform.rotation = hoeSphere.rotation;
+        // Lấy hướng nhìn của nhân vật
+        Vector3 lookDirection = blackboard.animator.transform.forward;
+        lookDirection.y = 0;
+        lookDirection.Normalize();
 
-        // Tính toán góc của Box Collider dựa trên center
+        // Xác định vị trí mới của hoeSphere phía trước nhân vật
+        Vector3 hoePosition = blackboard.transform.position + lookDirection * 1.5f;
+        hoePosition.y = fixedY;
+
+        // Xoay BoxCollider theo hướng nhìn
+        Quaternion rotation = Quaternion.LookRotation(lookDirection, Vector3.up);
+
+        // Các góc của BoxCollider
         Vector3[] localCorners = new Vector3[8]
         {
-        new Vector3(-colliderSize.x, -colliderSize.y, -colliderSize.z) + colliderCenter,
-        new Vector3(colliderSize.x, -colliderSize.y, -colliderSize.z) + colliderCenter,
-        new Vector3(colliderSize.x, -colliderSize.y, colliderSize.z) + colliderCenter,
-        new Vector3(-colliderSize.x, -colliderSize.y, colliderSize.z) + colliderCenter,
+        new Vector3(-colliderSize.x, -colliderSize.y, -colliderSize.z),
+        new Vector3(colliderSize.x, -colliderSize.y, -colliderSize.z),
+        new Vector3(colliderSize.x, -colliderSize.y, colliderSize.z),
+        new Vector3(-colliderSize.x, -colliderSize.y, colliderSize.z),
 
-        new Vector3(-colliderSize.x, colliderSize.y, -colliderSize.z) + colliderCenter,
-        new Vector3(colliderSize.x, colliderSize.y, -colliderSize.z) + colliderCenter,
-        new Vector3(colliderSize.x, colliderSize.y, colliderSize.z) + colliderCenter,
-        new Vector3(-colliderSize.x, colliderSize.y, colliderSize.z) + colliderCenter
+        new Vector3(-colliderSize.x, colliderSize.y, -colliderSize.z),
+        new Vector3(colliderSize.x, colliderSize.y, -colliderSize.z),
+        new Vector3(colliderSize.x, colliderSize.y, colliderSize.z),
+        new Vector3(-colliderSize.x, colliderSize.y, colliderSize.z)
         };
 
+        // Xoay và dịch chuyển các góc
         for (int i = 0; i < localCorners.Length; i++)
         {
-            localCorners[i] = HoeColider.transform.TransformPoint(localCorners[i]);
-            localCorners[i].y = fixedY; // Giữ nguyên Y
+            localCorners[i] = rotation * localCorners[i]; // Xoay
+            localCorners[i] += hoePosition; // Dịch vị trí ra trước mặt nhân vật
         }
 
-        // Vẽ các cạnh
+        // Vẽ khung
         Vector3[] edges = new Vector3[]
         {
         localCorners[0], localCorners[1],

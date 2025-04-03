@@ -6,9 +6,9 @@ public class Crop : Item
     [SerializeField] private Transform cropRenderer;
     [SerializeField] private ParticleSystem harvestedParticles;
 
-    private int TimeToGrowUp = 10;
+    [SerializeField] private int TimeToGrowUp = 10;
 
-    private bool isFullyGrown = false; //Biến kiểm soát
+    [SerializeField] private bool isFullyGrown = false; //Biến kiểm soát
 
     [Header("Actions")]
     public static Action realdyToHarvest;
@@ -33,6 +33,8 @@ public class Crop : Item
     public void ScaleDown()
     {
         if (!isFullyGrown) return; // Nếu chưa lớn đủ, không thu hoạch
+        Debug.Log("thu hoạch");
+
         harvestedParticles.gameObject.SetActive(true);
         harvestedParticles.transform.parent = null;
         harvestedParticles.Play();

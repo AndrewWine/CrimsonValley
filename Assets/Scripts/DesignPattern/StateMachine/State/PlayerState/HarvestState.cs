@@ -6,9 +6,6 @@ using UnityEngine;
 public class HarvestState : PlayerState
 {
 
-
-
-
     public override void Enter()
     {
         base.Enter();

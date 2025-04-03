@@ -4,8 +4,8 @@ using UnityEngine;
 public class Chicken : Animals
 {
 
-
  
 
- 
+
+
 }

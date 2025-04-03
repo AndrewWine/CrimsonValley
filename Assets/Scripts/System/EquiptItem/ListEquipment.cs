@@ -7,6 +7,19 @@ public class ListEquipment: MonoBehaviour
 {
     [SerializeField] private List<ItemData> equippedItems = new List<ItemData>();
 
+    public static ListEquipment Instance { get; private set; }
+
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
     public void AddItem(ItemData itemData)
     {
         if (itemData == null)
@@ -68,4 +81,16 @@ public class ListEquipment: MonoBehaviour
     {
         equippedItems.Clear();
     }
+
+    public int GetDurabilityIfEquipped(ItemData itemData)
+    {
+        if (itemData != null && equippedItems.Contains(itemData))
+        {
+            return itemData.durability;
+        }
+
+        Debug.LogWarning($"{itemData?.itemName} không được trang bị hoặc không hợp lệ.");
+        return 0; // Trả về -1 nếu không tìm thấy hoặc không hợp lệ
+    }
+
 }

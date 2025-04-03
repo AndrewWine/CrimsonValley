@@ -6,12 +6,21 @@ public class PlayerStatusManager : MonoBehaviour
     [SerializeField] private PlayerBlackBoard blackboard;
 
     public static PlayerStatusManager Instance;
+    public ListEquipment listEquipment;
+
     private string equippedItemName = ""; // Tên item đang được trang bị
 
     private void Start()
     {
         Instance = this;
     }
+
+    public ItemData GetEquippedItem(EquipType equipType)
+    {
+        return listEquipment?.GetEquippedItemByEquipType(equipType);
+    }
+
+
 
     public bool IsEquipped(string itemName)
     {
@@ -66,5 +75,11 @@ public class PlayerStatusManager : MonoBehaviour
 
         // Phát sự kiện StaminaChanged
         EventBus.Publish(new StaminaChangedEvent(blackboard.stamina));
+    }
+
+    public void ResetStamina(float amount)
+    {
+        blackboard.stamina += amount;
+        Debug.Log("Da hoi lai stamina" + blackboard.stamina);
     }
 }

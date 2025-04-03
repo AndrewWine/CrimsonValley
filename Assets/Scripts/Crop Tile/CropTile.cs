@@ -86,8 +86,9 @@ public class CropTile : MonoBehaviour
 
     public void Harvest()
     {
-        if (crop == null || crop.IsFullyGrown() == false)
+        if (crop == null || !crop.IsFullyGrown())
         {
+            Debug.Log("Chua the thu hoach");
             return; // Ngăn thu hoạch khi cây chưa phát triển đủ
         }
         InitializeSettings();
@@ -95,6 +96,7 @@ public class CropTile : MonoBehaviour
         crop.ScaleDown(); //Chỉ thu hoạch khi cây đã lớn đủ
         tileRenderer.gameObject.LeanColor(Color.white, 1).setEase(LeanTweenType.easeOutBack);
         onCropHarvested?.Invoke(cropData.itemName, dropAmount);//InventoryManager
+        Debug.Log("Harvest thanh cong");
     }
 
     public bool IsReadyToHarvest()

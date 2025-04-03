@@ -30,19 +30,19 @@ public class MiningAbility : MonoBehaviour
     {
         if (targetOreRock != null)
         {
+
             targetOreRock.TakeDamage(blackBoard.Pickaxedamage);
 
         }
         else
         {
-            Debug.Log("No tree detected!");
+            return;
         }
     }
 
     // Kiểm tra xem có đối tượng nào trong vùng trigger không
     private void OnTriggerStay(Collider other)
     {
-        Debug.Log($"Detected ore: {other.gameObject.name}"); // Kiểm tra va chạm với đối tượng nào
 
         if (other.CompareTag("Ore"))
         {
@@ -50,11 +50,10 @@ public class MiningAbility : MonoBehaviour
 
             if (targetOreRock != null)
             {
-                Debug.Log($"Ore detected: {other.gameObject.name}");
             }
             else
             {
-                Debug.LogWarning("TreeChopping component NOT found on Tree!");
+                return;
             }
         }
     }

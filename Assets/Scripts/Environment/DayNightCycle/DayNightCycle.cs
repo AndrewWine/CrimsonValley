@@ -6,7 +6,7 @@ public class DayNightCycle : MonoBehaviour
 {
     [Header("Time Settings")]
     [SerializeField] private float totalDayLength = 15f; // 15 phút cho 1 chu kỳ ngày-đêm
-    [SerializeField, Range(0f, 1f)] private float timeOfDay;
+    [SerializeField, Range(0f, 1f)] public float timeOfDay;
     [SerializeField] private int dayNumber = 0, yearNumber = 0, yearLength = 100;
     private float timeScale;
     public bool pause = false;
@@ -28,6 +28,7 @@ public class DayNightCycle : MonoBehaviour
 
     // UI Element to display time
     [SerializeField] private TextMeshProUGUI timeText;  // Thêm Text UI để hiển thị thời gian trong ngày
+    [SerializeField] private TextMeshProUGUI dayAndYearText;  // Thêm Text UI để hiển thị thời gian trong ngày
     [SerializeField] private Image DayIcon;  // Thêm Text UI để hiển thị thời gian trong ngày
     [SerializeField] private Image NightIcon;  // Thêm Text UI để hiển thị thời gian trong ngày
 
@@ -35,7 +36,7 @@ public class DayNightCycle : MonoBehaviour
     private void Start()
     {
         // Đặt thời gian mặc định vào sáng sớm
-        timeOfDay = 0.75f; // Tương đương khoảng 21h (ban đêm)
+        timeOfDay = 0.245f; // Tương đương khoảng 21h (ban đêm)
 
         // Tính toán lại ánh sáng ngay từ đầu
         AdjustSun();
@@ -123,6 +124,11 @@ public class DayNightCycle : MonoBehaviour
         return sun.intensity;
     }
 
+    public float GetCurrentHour()
+    {
+        return timeOfDay;
+    }
+
     public void SkipToNextDay()
     {
         dayNumber++; // Tăng ngày lên 1
@@ -141,5 +147,6 @@ public class DayNightCycle : MonoBehaviour
 
         // Cập nhật thời gian hiển thị trên UI
         timeText.text = $"{hour:00}:{minute:00}";
+        dayAndYearText.text = $"Day: {dayNumber}\nYear: {yearLength}";
     }
 }

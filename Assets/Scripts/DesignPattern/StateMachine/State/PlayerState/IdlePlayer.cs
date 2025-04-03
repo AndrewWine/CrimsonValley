@@ -62,8 +62,10 @@ public class IdleStatePlayer : PlayerState
         else if( blackboard.sleepButtonPressed)
         {
             stateMachine.ChangeState(blackboard.sleepState);
-
         }
-
+        else if (blackboard.stamina <= 0)
+        {
+            stateMachine.ChangeState(blackboard.sleepState);
+        }
     }
 }

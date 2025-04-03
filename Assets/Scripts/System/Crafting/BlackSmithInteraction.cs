@@ -88,9 +88,10 @@ public class BlackSmithInteraction : UIRequirementDisplay
     private void OnBuyItem(Dictionary<ItemData, int> boughtItems)
     {
         Debug.Log("Buy item smithy");
+
         if (inventoryManager == null)
         {
-            Debug.LogError(" InventoryManager chưa được gán!");
+            Debug.LogError("InventoryManager chưa được gán!");
             return;
         }
 
@@ -99,32 +100,32 @@ public class BlackSmithInteraction : UIRequirementDisplay
         foreach (var boughtEntry in boughtItems)
         {
             ItemData boughtItem = boughtEntry.Key;
-           
+            int quantity = boughtEntry.Value; // Lấy đúng số lượng của item
 
             int itemPrice = DataManagers.instance.GetItemPriceFromItemName(boughtItem.itemName);
-            int totalPrice = itemPrice * boughtItems.Count;
+            int totalPrice = itemPrice * quantity; // Nhân với số lượng đúng
 
-            // Kiểm tra xem người chơi có đủ tiền không
+            // Kiểm tra tiền
             if (CashManager.instance.GetCoins() >= totalPrice)
             {
-                // Trừ tiền
                 coinsSpent += totalPrice;
                 CashManager.instance.SpendCoins(totalPrice);
 
-                // Thêm vào kho
-                inventoryManager.PickUpItemCallBack(boughtItem.itemName, boughtItems.Count);
+                // Thêm vào inventory đúng số lượng
+                inventoryManager.PickUpItemCallBack(boughtItem.itemName, quantity);
 
-                Debug.Log($" Mua {boughtItem.itemName} x{boughtItems.Count} với giá {totalPrice} coins.");
+                Debug.Log($"Mua {boughtItem.itemName} x{quantity} với giá {totalPrice} coins.");
             }
             else
             {
-                Debug.LogError($" Không đủ tiền để mua {boughtItem.itemName} x{boughtItems.Count}!");
+                Debug.LogError($"Không đủ tiền để mua {boughtItem.itemName} x{quantity}!");
             }
         }
 
-        Debug.Log($" Đã tiêu {coinsSpent} coins để mua vật phẩm.");
+        Debug.Log($"Đã tiêu {coinsSpent} coins để mua vật phẩm.");
         inventoryManager.GetInventoryDisplay().UpdateDisplay(inventoryManager.GetInventory());
     }
+
 
 
 

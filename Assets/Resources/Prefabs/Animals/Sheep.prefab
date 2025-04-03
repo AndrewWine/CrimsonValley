@@ -125,7 +125,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4726309627774156559}
   - component: {fileID: 7386002271978468315}
-  - component: {fileID: 1397748200994443193}
+  - component: {fileID: 1478797728837165046}
   m_Layer: 0
   m_Name: sheepRenderer
   m_TagString: Untagged
@@ -172,7 +172,7 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &1397748200994443193
+--- !u!114 &1478797728837165046
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -181,11 +181,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 7158223160976028390}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a857584fa7eacbc4dace74dc16be1b07, type: 3}
+  m_Script: {fileID: 11500000, guid: d6e89bbe8f01429479998e22647b8f22, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  aniamalPos: {fileID: 2194490680084965668}
   minDelay: 2
-  maxDelay: 3
+  maxDelay: 5
 --- !u!1 &7909632021521433300
 GameObject:
   m_ObjectHideFlags: 0

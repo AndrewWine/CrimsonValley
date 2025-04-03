@@ -48,17 +48,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e76e770100530840adc98deaa94c123, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TopTree: {fileID: 7434606720347316168}
-  TrunkTree: {fileID: 4392318374696452408}
   itemData: {fileID: 11400000, guid: 155aca2d481315a4eb712fa31cd5c770, type: 2}
+  topTree: {fileID: 7434606720347316168}
+  trunkTree: {fileID: 4392318374696452408}
   woodParticles: {fileID: 861844437283468692}
-  inventoryManager: {fileID: 0}
   rbTopTree: {fileID: 7952552766795105574}
   trunkCollider: {fileID: 5005983581137180953}
-  TopTreeHealth: 5
-  TrunkTreeHealth: 3
+  topTreeHealth: 10
+  trunkTreeHealth: 10
   dropAmount: 2
-  isTopTree: 0
 --- !u!65 &8624248412166065750
 BoxCollider:
   m_ObjectHideFlags: 0

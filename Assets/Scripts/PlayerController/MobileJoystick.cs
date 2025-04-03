@@ -1,42 +1,67 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
-public class MobileJoystick : MonoBehaviour
+public class MobileJoystick : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointerUpHandler
 {
     [Header(" Elements ")]
     [SerializeField] private RectTransform joystickOutline;
-    [SerializeField] private RectTransform joysticKnob;
-    public RectTransform JoystickOutline => joystickOutline;
-    public RectTransform JoysticKnob => joysticKnob;
-    // Start is called before the first frame update
+    [SerializeField] private RectTransform joystickKnob;
+    [SerializeField] private Transform playerTransform; // Nhân vật
 
     [Header(" Setting ")]
     [SerializeField] private float moveFactor;
-    private Vector3 clickedPosition;
-    private Vector3 move;
+    private Vector2 clickedPosition;
+    private Vector2 move;
     private bool canControl;
-    private float maxdistanceOfKnob = 0.3f;
+    private float maxDistanceOfKnob = 100f; // Giới hạn di chuyển của joystickKnob
+    [SerializeField] private float rotationSpeed; // Tốc độ xoay nhân vật
+
     void Start()
     {
         HideJoystick();
     }
 
-    // Update is called once per frame
     void Update()
     {
-        if(canControl)
-            ControlJoystick();
+        if (playerTransform != null && move != Vector2.zero)
+        {
+            // Xoay nhân vật theo hướng joystick
+            float rotationAmount = move.x * rotationSpeed * Time.deltaTime;
+            playerTransform.Rotate(0, rotationAmount, 0);
+        }
     }
 
-    public void ClickOnJoystrickZoneCallback()
+    public void OnPointerDown(PointerEventData eventData)
     {
-        clickedPosition = Input.mousePosition;
+        clickedPosition = eventData.position;
         joystickOutline.position = clickedPosition;
-        joysticKnob.position = joystickOutline.position;
+        joystickKnob.position = clickedPosition;
         ShowJoystick();
         canControl = true;
-    }    
+    }
+
+    public void OnDrag(PointerEventData eventData)
+    {
+        if (!canControl) return;
+
+        Vector2 currentPosition = eventData.position;
+        Vector2 direction = currentPosition - clickedPosition;
+
+        if (direction.magnitude > maxDistanceOfKnob)
+        {
+            direction = direction.normalized * maxDistanceOfKnob;
+        }
+
+        joystickKnob.position = clickedPosition + direction;
+        move = (direction / maxDistanceOfKnob) * moveFactor;
+    }
+
+    public void OnPointerUp(PointerEventData eventData)
+    {
+        HideJoystick();
+    }
 
     private void ShowJoystick()
     {
@@ -47,31 +72,19 @@ public class MobileJoystick : MonoBehaviour
     {
         joystickOutline.gameObject.SetActive(false);
         canControl = false;
-        move = Vector3.zero;
+        move = Vector2.zero;
     }
 
-    private void ControlJoystick()
-    {
-        Vector3 currentPosition = Input.mousePosition;
-        Vector3 direction = currentPosition - clickedPosition;
-
-        float moveMagnitude = direction.magnitude * moveFactor / Screen.width;
-
-        moveMagnitude = Mathf.Min(moveMagnitude, joystickOutline.rect.width / 2);
-
-        move = direction.normalized * maxdistanceOfKnob * moveMagnitude;
-
-        Vector3 targetPosition = clickedPosition + move;
-
-        joysticKnob.position = targetPosition;
-
-        if(Input.GetMouseButtonUp(0)) 
-            HideJoystick();
-
-    }
-    
-    public Vector3 GetMoveVector()
+    public Vector2 GetMoveVector()
     {
         return move;
+    }
+    public void ClickOnJoystrickZoneCallback()
+    {
+        clickedPosition = Input.mousePosition;
+        joystickOutline.position = clickedPosition;
+        joystickKnob.position = joystickOutline.position;
+        ShowJoystick();
+        canControl = true;
     }
 }

@@ -67,8 +67,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a70bfae16a61e0f498b477be8f61a00e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  itemData: {fileID: 11400000, guid: c1d09c83598700741adeb1bb8c6c0744, type: 2}
   tilesParent: {fileID: 6302540714038649181}
-  cropData: {fileID: 11400000, guid: 93b826f3b918f92418eccb25e322bf57, type: 2}
+  cropData: {fileID: 11400000, guid: c1d09c83598700741adeb1bb8c6c0744, type: 2}
+  state: 0
 --- !u!1 &3518912033685142858
 GameObject:
   m_ObjectHideFlags: 0

@@ -12,10 +12,6 @@ public abstract class EntityBlackboard : MonoBehaviour
     public Animator animator;
 
     
-
-
-
-
     
 }
 

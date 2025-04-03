@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -16,7 +15,6 @@ public class BlackSmithWindow : UIRequirementDisplay
     [SerializeField] private UISelectButton uiSelectButton;
     [SerializeField] private Image itemIconImage; // Gán Image trong Inspector
 
-
     private ItemData currentItemSelected;
     [Header("Data")]
     [SerializeField] private ItemData[] items;
@@ -28,11 +26,10 @@ public class BlackSmithWindow : UIRequirementDisplay
     public static Action<Dictionary<ItemData, int>> BuyItem;
 
     private ItemData currentItem; // Item đang nhập số lượng
+
     private void Start()
     {
         enterQuantity.gameObject.SetActive(false);
-
-        // Trước khi thêm sự kiện, xóa hết để tránh bị trùng lặp
         finishButton.onClick.RemoveAllListeners();
         finishButton.onClick.AddListener(OnFinishButtonPressed);
     }
@@ -41,39 +38,31 @@ public class BlackSmithWindow : UIRequirementDisplay
     {
         UISelectButton.craftButtonPressed += SelectCraftItem;
         UISelectButton.tradeShopCraftButtonPressed += OnItemClicked;
-        
-
     }
 
     private void OnDisable()
     {
         UISelectButton.craftButtonPressed -= SelectCraftItem;
         UISelectButton.tradeShopCraftButtonPressed -= OnItemClicked;
-
     }
-
 
     public void OnItemClicked(ItemData clickedItem)
     {
-
-        // Nếu đang chọn một vật phẩm khác, bỏ chọn vật phẩm cũ
         if (currentItem != null && currentItem != clickedItem)
         {
-            uiSelectButton.SetClickedBorderActive(currentItem, false);
+        
             selectedItems.Remove(currentItem);
             TooltipManager.Instance.ShowToolTipOnTradeWindow(currentItem);
         }
 
         if (selectedItems.Contains(clickedItem))
         {
-            // Nếu click vào chính nó => Bỏ chọn
+            // Bỏ chọn vật phẩm
             selectedItems.Remove(clickedItem);
-            listItemChosen.Remove(clickedItem);
-            uiSelectButton.SetClickedBorderActive(clickedItem, false);
+           
             enterQuantity.SetActive(false);
             currentItem = null; // Reset vật phẩm hiện tại
             TooltipManager.Instance.HideTooltip();
-
         }
         else
         {
@@ -81,58 +70,60 @@ public class BlackSmithWindow : UIRequirementDisplay
             currentItem = clickedItem;
             selectedItems.Add(clickedItem);
             enterQuantity.SetActive(true);
-            quantityInputField.text = ""; // Reset ô nhập
-            uiSelectButton.SetClickedBorderActive(clickedItem, true);
+
+            // Nếu đã nhập số lượng trước đó, hiển thị lại
+            quantityInputField.text = listItemChosen.ContainsKey(currentItem) ? listItemChosen[currentItem].ToString() : "";
+
+      
             TooltipManager.Instance.ShowToolTipOnTradeWindow(currentItem);
         }
     }
 
-    // Khi người dùng nhấn "add" sau khi nhập số lượng
     public void OnFinishButtonPressed()
     {
         if (currentItem == null) return;
 
         if (int.TryParse(quantityInputField.text, out int quantity) && quantity > 0)
         {
-            // Thêm hoặc cập nhật số lượng item đã chọn
+            // Cập nhật số lượng vật phẩm
             listItemChosen[currentItem] = quantity;
-            Debug.Log($"{currentItem.itemName} x{quantity} đã được thêm vào danh sách.");
+            Debug.Log($" {currentItem.itemName} x{quantity} đã được thêm vào danh sách.");
         }
         else
         {
-            Debug.LogError("Số lượng nhập không hợp lệ!");
+            Debug.LogError(" Số lượng nhập không hợp lệ!");
             return;
         }
 
         enterQuantity.SetActive(false);
-        currentItem = null; // Reset item đang nhập
     }
 
-    // Xóa trạng thái chọn sau khi bán/mua
     private void ResetTradeSelection()
     {
-        foreach (var item in selectedItems)
-        {
-            uiSelectButton.SetClickedBorderActive(item, false);
-        }
+    
         selectedItems.Clear();
-        listItemChosen.Clear();
         enterQuantity.SetActive(false);
     }
-
 
     public void OnSellButtonPressed()
     {
         if (listItemChosen.Count > 0)
         {
-            SellItem?.Invoke(new Dictionary<ItemData, int>(listItemChosen));//tradeinteraction
+            Debug.Log(" Danh sách vật phẩm bán:");
+            foreach (var item in listItemChosen)
+            {
+                Debug.Log($"{item.Key.itemName} x{item.Value}");
+            }
+
+            SellItem?.Invoke(new Dictionary<ItemData, int>(listItemChosen));
+            listItemChosen.Clear(); // Chỉ xóa sau khi bán thành công
             ResetTradeSelection();
         }
         else
         {
-            Debug.Log("Không có vật phẩm nào để bán!");
+            Debug.Log(" Không có vật phẩm nào để bán!");
         }
-    } 
+    }
 
     public void OnBuyButtonPressed()
     {
@@ -140,6 +131,8 @@ public class BlackSmithWindow : UIRequirementDisplay
         {
             BuyItem?.Invoke(new Dictionary<ItemData, int>(listItemChosen));
             ResetTradeSelection();
+            listItemChosen.Clear();
+
         }
         else
         {
@@ -149,31 +142,26 @@ public class BlackSmithWindow : UIRequirementDisplay
 
 
 
-
     public void SelectCraftItem(ItemData itemData)
     {
         currentItemSelected = itemData;
 
-        // Kiểm tra itemData có icon không
         if (itemIconImage != null && itemData.icon != null)
         {
-            itemIconImage.sprite = itemData.icon; // Gán icon vào Image UI
-            itemIconImage.gameObject.SetActive(true); // Bật Image lên nếu nó đang ẩn
+            itemIconImage.sprite = itemData.icon;
+            itemIconImage.gameObject.SetActive(true);
         }
         else
         {
-            Debug.LogError("ItemData hoặc Image chưa được gán đúng!");
+            Debug.LogError(" ItemData hoặc Image chưa được gán đúng!");
         }
 
-        // Hiển thị nguyên liệu yêu cầu
         ShowRequiredItems(
             itemData.requiredItems,
             itemData.requiredAmounts,
             DataManagers.instance.GetItemSpriteFromName
         );
 
-        Debug.Log($"Đã chọn {itemData.itemName}");
+        Debug.Log($" Đã chọn {itemData.itemName}");
     }
-
-
 }

@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class BuildingSystem : UIRequirementDisplay
 {
@@ -19,6 +17,7 @@ public class BuildingSystem : UIRequirementDisplay
     [SerializeField] private bool hasObstacle = false;
     private bool isOnGround = false;
     private bool notEnoughItem = false;
+    private bool canCreateBuilding = false;
 
     [Header("Architecture Prefabs")]
     private GameObject architectureSelected;
@@ -27,6 +26,8 @@ public class BuildingSystem : UIRequirementDisplay
     [Header("Actions")]
     public static Action generateButton;
 
+    private List<GameObject> placedBuildings = new List<GameObject>(); //  Thêm danh sách công trình đã đặt
+
     private void Start()
     {
         UISelectButton.buildButtonPressed += SelectArchitecture;
@@ -34,7 +35,6 @@ public class BuildingSystem : UIRequirementDisplay
         playerToolSelector = GetComponent<PlayerToolSelector>();
         playerToolSelector.onToolSelected += ToolSelectedCallBack;
         BuildSystemUI.SetActive(false);
-
         ActionButton.Building += PlaceBuilding;
     }
 
@@ -60,7 +60,7 @@ public class BuildingSystem : UIRequirementDisplay
 
         if (selectedTool == PlayerToolSelector.Tool.Hammer)
         {
-            generateButton?.Invoke();//UISelectButton
+            generateButton?.Invoke();
         }
     }
 
@@ -73,11 +73,9 @@ public class BuildingSystem : UIRequirementDisplay
             Destroy(architectureSelected);
         }
 
-        // Hiển thị mô hình preview
-        architectureSelected = Instantiate(buildingData.buildingPrefab);
+        architectureSelected = Instantiate(buildingData.buildingPrefab, checkTransform.position, Quaternion.identity);
         ToggleBuildingMode(architectureSelected);
 
-        // Gọi hàm từ UIRequirementDisplay để hiển thị nguyên liệu
         ShowRequiredItems(
             buildingData.requiredItems,
             buildingData.requiredAmounts,
@@ -114,13 +112,8 @@ public class BuildingSystem : UIRequirementDisplay
     {
         if (architecture == null) return;
 
-        float distanceFromPlayer = 7f;
-        Vector3 targetPosition = checkTransform.position + (checkTransform.forward * distanceFromPlayer);
-
-        if (Physics.Raycast(targetPosition + Vector3.up * 5, Vector3.down, out RaycastHit hit, Mathf.Infinity, groundLayer))
-        {
-            architecture.transform.position = new Vector3(hit.point.x, hit.point.y + 2f, hit.point.z);
-        }
+        Vector3 targetPosition = checkTransform.position + checkTransform.forward * 7f;
+        architecture.transform.position = new Vector3(targetPosition.x, 11.5f, targetPosition.z);
     }
 
     private void ValidatePlacement()
@@ -130,14 +123,11 @@ public class BuildingSystem : UIRequirementDisplay
         isOnGround = false;
         hasObstacle = false;
 
-        // Lấy tất cả MeshRenderer của công trình để đổi màu
         MeshRenderer[] renderers = architectureSelected.GetComponentsInChildren<MeshRenderer>();
-        if (renderers.Length == 0) return; // Nếu không có renderer, thoát sớm
+        if (renderers.Length == 0) return;
 
-        // Mặc định đặt màu xanh lá cây (có thể thay đổi nếu phát hiện vật cản)
         Color targetColor = Color.green;
 
-        // Lấy danh sách các collider xung quanh công trình
         Bounds bounds = renderers[0].bounds;
         Collider[] colliders = Physics.OverlapBox(bounds.center, bounds.extents, Quaternion.identity);
 
@@ -146,22 +136,17 @@ public class BuildingSystem : UIRequirementDisplay
             if (col.gameObject == architectureSelected || col.transform.IsChildOf(architectureSelected.transform))
                 continue;
 
-            if (col.CompareTag("Ground"))
+            if (col.CompareTag("Ground") || col.CompareTag("FarmArea"))
             {
                 isOnGround = true;
-                Debug.Log("isground");
             }
             else
             {
                 hasObstacle = true;
-                Debug.Log("hasObstacle");
-
-                // Nếu phát hiện vật thể cản trở -> đổi màu sang đỏ
                 targetColor = Color.red;
             }
         }
 
-        // Đổi màu toàn bộ kiến trúc dựa trên kết quả kiểm tra
         foreach (MeshRenderer renderer in renderers)
         {
             foreach (Material mat in renderer.materials)
@@ -171,20 +156,19 @@ public class BuildingSystem : UIRequirementDisplay
         }
     }
 
-    private void PlaceBuilding()
+    public void PlaceBuilding()
     {
         if (architectureSelected == null || hasObstacle) return;
         if (currentBuildingRequirement == null) return;
 
-        bool hasEnough = true; //  Mặc định là true, sẽ chuyển thành false nếu thiếu nguyên liệu
+        bool hasEnough = true; //  Mặc định có đủ nguyên liệu
 
-        // Kiểm tra từng nguyên liệu
+        //  Kiểm tra đủ nguyên liệu hay không
         for (int i = 0; i < currentBuildingRequirement.requiredItems.Length; i++)
         {
-            string itemName = currentBuildingRequirement.requiredItems[i];  // Lấy từng item
-            int requiredAmount = currentBuildingRequirement.requiredAmounts[i]; // Số lượng cần
+            string itemName = currentBuildingRequirement.requiredItems[i];
+            int requiredAmount = currentBuildingRequirement.requiredAmounts[i];
 
-            // Nếu thiếu bất kỳ nguyên liệu nào => Không đủ, dừng kiểm tra
             if (!inventoryManager.FindItemByName(itemName, requiredAmount))
             {
                 hasEnough = false;
@@ -192,35 +176,52 @@ public class BuildingSystem : UIRequirementDisplay
             }
         }
 
-        Debug.Log("Trạng thái nguyên liệu: " + hasEnough);
-
-        // Nếu không đủ nguyên liệu, không xây dựng
         if (!hasEnough)
         {
-            Debug.LogWarning(" Không đủ nguyên liệu để xây dựng!");
+            Debug.LogWarning("Không đủ nguyên liệu để xây dựng!");
             return;
         }
 
-        //  Đủ nguyên liệu -> Trừ nguyên liệu & Tiến hành xây dựng
+        //  Trừ nguyên liệu trong InventoryManager
         for (int i = 0; i < currentBuildingRequirement.requiredItems.Length; i++)
         {
-            inventoryManager.GetInventory().RemoveItemByName(currentBuildingRequirement.requiredItems[i], currentBuildingRequirement.requiredAmounts[i]);
+            inventoryManager.GetInventory().RemoveItemByName(
+                currentBuildingRequirement.requiredItems[i],
+                currentBuildingRequirement.requiredAmounts[i]
+            );
         }
 
-        Debug.Log(" Nguyên liệu hợp lệ! Tiến hành xây dựng...");
+        Debug.Log("Đủ nguyên liệu! Tiến hành xây dựng...");
 
-        // Đặt công trình
-        Instantiate(currentBuildingRequirement.buildingPrefab, architectureSelected.transform.position, architectureSelected.transform.rotation);
+        //  Đặt công trình vào thế giới
+        GameObject placedObject = Instantiate(
+            currentBuildingRequirement.buildingPrefab,
+            architectureSelected.transform.position,
+            architectureSelected.transform.rotation
+        );
+
+        //  Gán `BuildingData` vào component `PlacedBuilding`
+        PlacedBuilding placedComponent = placedObject.AddComponent<PlacedBuilding>();
+        placedComponent.buildingData = currentBuildingRequirement;
+
+        placedBuildings.Add(placedObject); // Thêm vào danh sách công trình đã đặt
+
+        //  Gửi sự kiện xây dựng hoàn tất
+        PlacedBuildingData placedData = new PlacedBuildingData(
+            currentBuildingRequirement.buildingName,
+            placedObject.transform.position,
+            placedObject.transform.rotation
+        );
+        EventBus.Publish(new BuildingPlacedEvent(placedData));
 
         ResetBuildingColor();
 
-        // Xóa preview
+        //  Xóa mô hình preview
         Destroy(architectureSelected);
         architectureSelected = null;
 
-        Debug.Log(" Công trình đã được xây dựng thành công!");
+        Debug.Log("Công trình đã được xây dựng thành công!");
         inventoryManager.GetInventoryDisplay().UpdateDisplay(inventoryManager.GetInventory());
-
     }
 
     private void ResetBuildingColor()
@@ -241,4 +242,32 @@ public class BuildingSystem : UIRequirementDisplay
             architectureSelected.transform.rotation *= Quaternion.Euler(0, 90, 0);
         }
     }
+
+    public void LoadBuilding(GameObject prefab, Vector3 position, Quaternion rotation)
+    {
+        if (prefab == null) return;
+
+        GameObject placedObject = Instantiate(prefab, position, rotation);
+        placedBuildings.Add(placedObject); //  Thêm vào danh sách công trình đã đặt
+
+        Debug.Log($" Đã tải công trình '{prefab.name}' tại {position}!");
+    }
+
+    public List<GameObject> GetPlacedBuildings()
+    {
+        return placedBuildings;
+    }
+
+    public void ClearPlacedBuildings()
+    {
+        foreach (var building in GetPlacedBuildings())
+        {
+            Destroy(building.gameObject);
+        }
+
+        // Xóa danh sách các công trình đã đặt
+        placedBuildings.Clear();
+        Debug.Log("🔴 Đã xóa toàn bộ công trình cũ trước khi load!");
+    }
+
 }

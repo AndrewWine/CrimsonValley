@@ -6,7 +6,6 @@ public class Animals : MonoBehaviour
     [Header("Elements")]
     protected Animator animator;
     private AnimationClip[] animationClips;
-
     [Header("Random Animation Settings")]
     [SerializeField] protected float minDelay = 2f;
     [SerializeField] protected float maxDelay = 5f;

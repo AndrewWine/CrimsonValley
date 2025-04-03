@@ -673,6 +673,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 31523cb45bbe3774aaa0a89be467ffbe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  aniamalPos: {fileID: 8356379580763254096}
   minDelay: 5
   maxDelay: 10
 --- !u!1 &7797879808805593552

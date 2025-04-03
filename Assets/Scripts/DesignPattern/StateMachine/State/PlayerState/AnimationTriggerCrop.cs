@@ -36,6 +36,10 @@ public class AnimationTriggerCrop : MonoBehaviour
         onHarvestTriggered?.Invoke();//cropfield
     }
 
+    public void Mining()
+    {
+        AudioManager.instance.PlaySFX(3,null);
+    }
     public void Hoeing()
     {
         onCreateACropField?.Invoke();//HoeAbility

@@ -16,12 +16,12 @@ public class CameraManager : MonoBehaviour
 
     private void OnEnable()
     {
-        CheckCropFieldState.changeCameraAngel += OnChangeAngelOfCamera;
+        CheckGameObject.changeCameraAngel += OnChangeAngelOfCamera;
     }
 
     private void OnDisable()
     {
-        CheckCropFieldState.changeCameraAngel -= OnChangeAngelOfCamera;
+        CheckGameObject.changeCameraAngel -= OnChangeAngelOfCamera;
     }
 
     private void OnChangeAngelOfCamera(bool check)

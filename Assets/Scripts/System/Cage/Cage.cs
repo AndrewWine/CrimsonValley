@@ -1,121 +1,108 @@
 ﻿using System;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class Cage : MonoBehaviour
 {
-    [Header("Elements")]
+    [Header("Cage State")]
     [SerializeField] public CageState state;
+    [SerializeField] protected Transform CagePos;
+    [Header("Item Drop Settings")]
     [SerializeField] private ItemData itemDrop;
+    [SerializeField] private int dropAmount = 10;
 
+    [Header("Feeding & Production")]
+    [SerializeField] private int nutritionValue;
+    [SerializeField] private int harvestDuration;
+    [SerializeField] private int digestionTime = 10;
 
+    [SerializeField] private float timeUntilHarvest;
+    [SerializeField] private float feedingTimer;
 
-    [Header("Settings")]
-    [SerializeField] protected int nutrition;
-    [SerializeField] protected int harvestTimer;
-    [SerializeField] protected int slot;
-    [SerializeField] protected float feedingTimer;
-    [SerializeField] protected int DigestionTime = 10;
-    protected float timeToHarvestProductPassed = 0;
-    [SerializeField] protected int dropAmount = 10;
+    [Header("Event Modifiers")]
+    private int buffDropRate;
+    private int debuffDropRate;
 
-    [Header("QuantityItems")]
-    [SerializeField] protected int quantity;
-    [SerializeField] protected string nameOfMaterial;
-
-    [Header("Actions")]
-    public static Action<string, int> GiveItemToPlayer;
-
-    [Header("Buff and Debuff of CrimsonMoon event")]
-    private int BuffdropRate ;
-    private int DeBuffdropRate ;
-
-    protected virtual void start()
+    protected virtual void Start()
     {
-        InitializeSetting();
-        CheckUICageStatus.FeedButton += ReduceTimeProduce;
-        CheckUICageStatus.TakeProduceButton += ResetTakeProduceTimer;
-        CaculatedDropAmount();
-    }
-
-    protected virtual void CaculatedDropAmount()
-    {
-        dropAmount = UnityEngine.Random.Range(3, 5);
-        BuffdropRate = UnityEngine.Random.Range(1, 3);
-        DeBuffdropRate = UnityEngine.Random.Range(1, 2);
+        InitializeCage();
+        CheckUICageStatus.OnFeed += HandleFeeding;
+        CheckUICageStatus.OnHarvest += ResetHarvestTimer;
+        CalculateDropAmount();
     }
 
     protected virtual void OnDestroy()
     {
-        CheckUICageStatus.FeedButton -= ReduceTimeProduce;
-        CheckUICageStatus.TakeProduceButton -= ResetTakeProduceTimer;
+        CheckUICageStatus.OnFeed -= HandleFeeding;
+        CheckUICageStatus.OnHarvest -= ResetHarvestTimer;
     }
 
-    private void InitializeSetting()
+    private void InitializeCage()
     {
-        feedingTimer = DigestionTime;
-        timeToHarvestProductPassed = harvestTimer;
-       
+        feedingTimer = digestionTime;
+        timeUntilHarvest = harvestDuration;
     }
 
-
-    protected virtual void Update()
+    private void Update()
     {
-        timeCounter();
+        UpdateTimers();
     }
 
-    protected virtual void CheckHarvestProduce()
-    {
-        state = CageState.TakeProduce;
-    }
-    protected virtual void ChangeFeedStatusOfAnimals()
-    {
-        state = CageState.Hungry;
-    }
-
-    private void timeCounter()
+    private void UpdateTimers()
     {
         feedingTimer -= Time.deltaTime;
-        timeToHarvestProductPassed -= Time.deltaTime;
-        if (feedingTimer < 0) ChangeFeedStatusOfAnimals();
-        if (timeToHarvestProductPassed < 0) CheckHarvestProduce();
+        timeUntilHarvest -= Time.deltaTime;
+
+
+        if (feedingTimer <= 0) SetState(CageState.Hungry);
+        if (timeUntilHarvest <= 0)
+        {
+            SetState(CageState.TakeProduce);
+        }
     }
 
-    public virtual void ReduceTimeProduce(int nutrition)
+
+
+    private void SetState(CageState newState)
     {
-        if (nutrition > 0)
-        {
-            // Giảm thời gian thu hoạch
-            timeToHarvestProductPassed -= nutrition;
-            feedingTimer = DigestionTime;
-          
-        }
-        else
+        state = newState;
+    }
+
+    private void CalculateDropAmount()
+    {
+        dropAmount = UnityEngine.Random.Range(3, 5);
+        buffDropRate = UnityEngine.Random.Range(1, 3);
+        debuffDropRate = UnityEngine.Random.Range(1, 2);
+    }
+
+
+
+    public virtual void HandleFeeding(int nutrition)
+    {
+        if (nutrition <= 0)
         {
             Debug.LogWarning("Invalid nutrition value.");
+            return;
         }
+
+        timeUntilHarvest -= nutrition;
+        feedingTimer = digestionTime;
     }
 
-    // Phương thức dùng chung cho tất cả các lớp con
-    protected virtual void ResetTakeProduceTimer()
+    public virtual void ResetHarvestTimer()
     {
-        CaculatedDropAmount();
-        Debug.Log("Goi ham Reset");
-        PickupItem();
-        timeToHarvestProductPassed = harvestTimer;
+        CalculateDropAmount();
+        Debug.Log("Reset harvest timer.");
+        HarvestItem();
+
+        // Reset lại thời gian để không bị auto TakeProduce
+        timeUntilHarvest = harvestDuration;
     }
 
-    public virtual void PickupItem()
+
+    public virtual void HarvestItem()
     {
-        CaculatedDropAmount();
-
-        Debug.Log("Da gui tin hieu trc day");
-
-        // Tính toán số lượng vật phẩm cần rơi (có thể thay đổi theo logic của bạn)
-        Debug.Log("gui tin hieu");
-
-        GiveItemToPlayer?.Invoke(itemDrop.name, dropAmount);//InventoryManager
-        Debug.Log("Da gui tin hieu");
+        CalculateDropAmount();
+        Debug.Log("Item picked up.");
+        EventBus.Publish(new ItemPickedUp(itemDrop.itemName, dropAmount));
     }
-
 }

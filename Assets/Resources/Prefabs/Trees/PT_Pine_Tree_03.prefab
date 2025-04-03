@@ -4960,17 +4960,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e76e770100530840adc98deaa94c123, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TopTree: {fileID: 7287828787407131260}
-  TrunkTree: {fileID: 7401179112918523392}
   itemData: {fileID: 11400000, guid: 155aca2d481315a4eb712fa31cd5c770, type: 2}
+  topTree: {fileID: 7287828787407131260}
+  trunkTree: {fileID: 7401179112918523392}
   woodParticles: {fileID: 4825217611454094165}
-  inventoryManager: {fileID: 0}
   rbTopTree: {fileID: 5415567616067107505}
   trunkCollider: {fileID: 4969662393083961288}
-  TopTreeHealth: 12
-  TrunkTreeHealth: 5
+  topTreeHealth: 10
+  trunkTreeHealth: 10
   dropAmount: 3
-  isTopTree: 0
 --- !u!23 &3159826227577219470
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -5023,7 +5021,7 @@ LODGroup:
   m_GameObject: {fileID: 4402195140576541770}
   serializedVersion: 2
   m_LocalReferencePoint: {x: 0.02064164, y: 0.05083406, z: 0.040295184}
-  m_Size: 6
+  m_Size: 7
   m_FadeMode: 0
   m_AnimateCrossFading: 0
   m_LastLODIsBillboard: 0

@@ -6,7 +6,7 @@ using UnityEngine;
 public class Inventory
 {
     [SerializeField] private List<InventoryItem> items = new List<InventoryItem>();
-
+    public static Action<Inventory> NotifyUpdateInventoryDisplay;
     public void AddItemByName(string itemName, int amount)
     {
         if (amount <= 0)
@@ -78,24 +78,33 @@ public class Inventory
 
     public void RemoveItemByName(string itemName, int amountToRemove)
     {
-        InventoryItem existingItem = items.Find(item => item.itemName.Equals(itemName, System.StringComparison.OrdinalIgnoreCase));
+        InventoryItem existingItem = items.Find(item => item.itemName.Equals(itemName, StringComparison.OrdinalIgnoreCase));
 
         if (existingItem != null)
         {
             if (existingItem.amount > amountToRemove)
             {
                 existingItem.amount -= amountToRemove;
+                Debug.Log($"Đã xóa {amountToRemove} {itemName} khỏi inventory. Số lượng còn lại: {existingItem.amount}");
             }
             else
             {
                 items.Remove(existingItem);
+                Debug.Log($"Đã xóa {amountToRemove} {itemName} khỏi inventory. Item này đã hết.");
             }
-
-            Debug.Log($"Đã xóa {amountToRemove} {itemName} khỏi inventory. Số lượng còn lại: {existingItem.amount}");
         }
         else
         {
             Debug.LogWarning($"Không tìm thấy {itemName} trong inventory để xóa.");
         }
+
+        NotifyUpdateInventoryDisplay?.Invoke(this);//InventoryDisplay
     }
+
+    public int GetItemCountByName(string itemName)
+    {
+        InventoryItem existingItem = items.Find(item => item.itemName.Equals(itemName, StringComparison.OrdinalIgnoreCase));
+        return existingItem != null ? existingItem.amount : 0;
+    }
+
 }

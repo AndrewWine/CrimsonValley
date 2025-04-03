@@ -48,6 +48,7 @@ public class PlayerBlackBoard : EntityBlackboard
     public bool miningButtonPressed = false;
     public bool jumpButtonPressed = false;
     public bool sleepButtonPressed = false;
+    public bool shovelButtonPressed = false;
     public bool timeToSleep = false;
 
 
