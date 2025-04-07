@@ -50,6 +50,6 @@ public class PlayerBlackBoard : EntityBlackboard
     public bool sleepButtonPressed = false;
     public bool shovelButtonPressed = false;
     public bool timeToSleep = false;
-
+    public bool isTree = false;
 
 }

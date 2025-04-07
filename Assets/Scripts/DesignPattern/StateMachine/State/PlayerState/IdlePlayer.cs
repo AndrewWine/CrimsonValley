@@ -47,7 +47,7 @@ public class IdleStatePlayer : PlayerState
         {
             stateMachine.ChangeState(blackboard.hoeState);
         }
-        else if (blackboard.cutButtonPressed)
+        else if (blackboard.cutButtonPressed && blackboard.isTree)
         {
             stateMachine.ChangeState(blackboard.cutState);
         }

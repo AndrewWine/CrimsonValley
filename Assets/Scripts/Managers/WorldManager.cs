@@ -7,11 +7,11 @@ using UnityEngine;
 public class WorldManager : MonoBehaviour
 {
     public static WorldManager instance; // Thêm biến instance
-
+    [SerializeField] private DayNightCycle dayNightCycle;
 
     private string dataPath;
     public WorldData worldData;
-
+    
     private void Awake()
     {
         if (instance == null)
@@ -61,13 +61,18 @@ public class WorldManager : MonoBehaviour
         EventBus.Unsubscribe<BuildingDestroyedEvent>(OnBuildingDestroyed); 
 
     }
+
+
+
     public void SaveWorld()
     {
         if (worldData == null)
             worldData = new WorldData();
-
+        worldData._timeOfDay = dayNightCycle.timeOfDay;
+        worldData._dayNumber = dayNightCycle.dayNumber;
+        worldData._yearNumber = dayNightCycle.yearNumber;
+        worldData._yearLength = dayNightCycle.yearLength;
         worldData.gameDateTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-
         // Tạo danh sách mới và xóa danh sách cũ trong worldData
         List<PlacedItemData> newPlacedItems = new List<PlacedItemData>();
         List<PlacedBuildingData> newPlacedBuildings = new List<PlacedBuildingData>();
@@ -199,7 +204,7 @@ public class WorldManager : MonoBehaviour
         {
             if (string.IsNullOrEmpty(itemData.itemName))
             {
-                Debug.LogWarning("⚠ Bỏ qua item không có tên!");
+                Debug.LogWarning(" Bỏ qua item không có tên!");
                 continue;
             }
 
@@ -207,11 +212,11 @@ public class WorldManager : MonoBehaviour
             if (itemPrefab != null && itemPrefab.itemPrefab != null)
             {
                 GameObject newItemObj = Instantiate(itemPrefab.itemPrefab.gameObject, itemData.position, itemData.rotation);
-                Debug.Log($"✅ Đã tạo {itemData.itemName} tại {itemData.position}");
+                Debug.Log($" Đã tạo {itemData.itemName} tại {itemData.position}");
             }
             else
             {
-                Debug.LogError($"❌ Không tìm thấy prefab cho {itemData.itemName}");
+                Debug.LogError($" Không tìm thấy prefab cho {itemData.itemName}");
             }
         }
 
@@ -229,7 +234,7 @@ public class WorldManager : MonoBehaviour
                 }
                 else
                 {
-                    Debug.LogError($"❌ Không tìm thấy prefab cho {buildingData.buildingName}");
+                    Debug.LogError($" Không tìm thấy prefab cho {buildingData.buildingName}");
                 }
             }
         }

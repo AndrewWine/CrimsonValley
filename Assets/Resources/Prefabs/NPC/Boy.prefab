@@ -1002,6 +1002,7 @@ GameObject:
   - component: {fileID: 2303451460308226432}
   - component: {fileID: 913407371590137389}
   - component: {fileID: 2092258065332332880}
+  - component: {fileID: 5714362102114426486}
   m_Layer: 0
   m_Name: Boy
   m_TagString: Untagged
@@ -1089,6 +1090,9 @@ MonoBehaviour:
   dayNightCycle: {fileID: 0}
   nPCIdle: {fileID: 2643942239105340395}
   nPCMove: {fileID: 4280696797524794880}
+  nPCChop: {fileID: 0}
+  nPCPickAxe: {fileID: 0}
+  nPCPlantTree: {fileID: 0}
 --- !u!114 &2092258065332332880
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1105,6 +1109,22 @@ MonoBehaviour:
   stateMachine: {fileID: 6708874393029943093}
   blackboard: {fileID: 913407371590137389}
   isScheduleComplete: 1
+--- !u!114 &5714362102114426486
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7418102631430081326}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1c5dbeceb68211f48bcfc9f06ca445a3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  questsToGive:
+  - {fileID: 11400000, guid: 4c5fd7c7460b8ce44bc679e4d8d61cad, type: 2}
+  questManager: {fileID: 0}
+  questGiverID: Alex
 --- !u!1 &7981538986231490432
 GameObject:
   m_ObjectHideFlags: 0

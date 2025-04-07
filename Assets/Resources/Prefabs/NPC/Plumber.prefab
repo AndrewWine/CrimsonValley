@@ -494,6 +494,7 @@ GameObject:
   - component: {fileID: 2341281173958420614}
   - component: {fileID: 8444221719242792973}
   - component: {fileID: 4872573922924118279}
+  - component: {fileID: 8215518367831686585}
   m_Layer: 0
   m_Name: Plumber
   m_TagString: Untagged
@@ -579,8 +580,12 @@ MonoBehaviour:
   statesParent: {fileID: 3723342661443812508}
   animator: {fileID: 714420781118382199}
   dayNightCycle: {fileID: 0}
+  nameNPC: {fileID: 0}
   nPCIdle: {fileID: 7736398803831286189}
   nPCMove: {fileID: 6868634710797958999}
+  nPCChop: {fileID: 0}
+  nPCPickAxe: {fileID: 0}
+  nPCPlantTree: {fileID: 0}
 --- !u!114 &4872573922924118279
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -597,6 +602,22 @@ MonoBehaviour:
   stateMachine: {fileID: 7961865445891684885}
   blackboard: {fileID: 8444221719242792973}
   isScheduleComplete: 1
+--- !u!114 &8215518367831686585
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4201113005184322170}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1c5dbeceb68211f48bcfc9f06ca445a3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  questsToGive:
+  - {fileID: 11400000, guid: 92cc47a0bcc070346b556acff3cd6c23, type: 2}
+  questManager: {fileID: 0}
+  questGiverID: Mike
 --- !u!1 &4502541505082930057
 GameObject:
   m_ObjectHideFlags: 0

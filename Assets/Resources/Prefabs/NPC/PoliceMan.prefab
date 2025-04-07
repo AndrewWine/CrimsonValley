@@ -1416,6 +1416,7 @@ GameObject:
   - component: {fileID: 768655841567746580}
   - component: {fileID: 3904607239888249646}
   - component: {fileID: 4359650304737605460}
+  - component: {fileID: 3944460595511298392}
   m_Layer: 0
   m_Name: PoliceMan
   m_TagString: Untagged
@@ -1502,8 +1503,12 @@ MonoBehaviour:
   statesParent: {fileID: 5166866986131640749}
   animator: {fileID: 1913106786421823457}
   dayNightCycle: {fileID: 0}
+  nameNPC: {fileID: 0}
   nPCIdle: {fileID: 784539865481124201}
   nPCMove: {fileID: 6620000735386595370}
+  nPCChop: {fileID: 0}
+  nPCPickAxe: {fileID: 0}
+  nPCPlantTree: {fileID: 0}
 --- !u!114 &4359650304737605460
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1520,6 +1525,22 @@ MonoBehaviour:
   stateMachine: {fileID: 8507119973529775811}
   blackboard: {fileID: 3904607239888249646}
   isScheduleComplete: 1
+--- !u!114 &3944460595511298392
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9035097523029932879}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1c5dbeceb68211f48bcfc9f06ca445a3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  questsToGive:
+  - {fileID: 11400000, guid: 56cd71c75e326bd49b818b067a5e7db5, type: 2}
+  questManager: {fileID: 0}
+  questGiverID: Sheriff
 --- !u!1 &9218196660020469467
 GameObject:
   m_ObjectHideFlags: 0

@@ -17,6 +17,7 @@ public class CutState : PlayerState
     public override void Enter()
     {
         base.Enter();
+        AudioManager.instance.PlaySFX(0, null);
         blackboard.cutButtonPressed = false;
         blackboard.animator.Play("Cutting");
     }

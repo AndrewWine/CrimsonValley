@@ -1330,6 +1330,7 @@ GameObject:
   - component: {fileID: 5761474891204655303}
   - component: {fileID: 5555336285250439506}
   - component: {fileID: 7771537511917453901}
+  - component: {fileID: 7933492703528620832}
   m_Layer: 0
   m_Name: GodFather
   m_TagString: Untagged
@@ -1415,8 +1416,12 @@ MonoBehaviour:
   statesParent: {fileID: 2143823322675041095}
   animator: {fileID: 2670895046056816049}
   dayNightCycle: {fileID: 0}
+  nameNPC: {fileID: 0}
   nPCIdle: {fileID: 3517830411186864231}
   nPCMove: {fileID: 7006052530763613611}
+  nPCChop: {fileID: 0}
+  nPCPickAxe: {fileID: 0}
+  nPCPlantTree: {fileID: 0}
 --- !u!114 &7771537511917453901
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1433,6 +1438,22 @@ MonoBehaviour:
   stateMachine: {fileID: 1777230373872708472}
   blackboard: {fileID: 5555336285250439506}
   isScheduleComplete: 1
+--- !u!114 &7933492703528620832
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8403680510718100770}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1c5dbeceb68211f48bcfc9f06ca445a3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  questsToGive:
+  - {fileID: 11400000, guid: 45238090e50ca7b4da57843668e60e29, type: 2}
+  questManager: {fileID: 0}
+  questGiverID: GodFather
 --- !u!1 &8520252729477243098
 GameObject:
   m_ObjectHideFlags: 0

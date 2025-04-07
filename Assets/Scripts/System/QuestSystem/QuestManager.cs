@@ -1,10 +1,13 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
-
+using System;
 public class QuestManager : MonoBehaviour
 {
+    [Header("Elements")]
     public List<Quest> activeQuests = new List<Quest>(); // Danh sách nhiệm vụ đang hoạt động
     public QuestGiver[] allQuestGivers; // Danh sách tất cả QuestGivers
+    public static Action NotifyFailMessage;//NotifyMessage
+    public static Action NotifyCompleteMessage;
 
     // Kích hoạt nhiệm vụ mới và thêm vào danh sách activeQuests
     public void ActivateQuest(Quest quest, string giverID)
@@ -31,7 +34,8 @@ public class QuestManager : MonoBehaviour
         {
             if (!requiredItem.IsCompleted())
             {
-                Debug.LogWarning($"Chưa đủ {requiredItem.requiredItemName} để hoàn thành nhiệm vụ.");
+                //Debug.LogWarning($"Chưa đủ {requiredItem.requiredItemName} để hoàn thành nhiệm vụ.");
+                NotifyFailMessage?.Invoke();
                 return false;  // Nếu có vật phẩm nào chưa hoàn thành, không thể hoàn thành quest
             }
         }
@@ -51,8 +55,8 @@ public class QuestManager : MonoBehaviour
                 {
                     quest.CompleteQuest(); // Hoàn thành nhiệm vụ
                     activeQuests.Remove(quest); // Xóa quest khỏi danh sách activeQuests
-                    Debug.Log($"Nhiệm vụ '{quest.questName}' đã hoàn thành tại NPC '{giverID}'.");
-
+                    //Debug.Log($"Nhiệm vụ '{quest.questName}' đã hoàn thành tại NPC '{giverID}'.");
+                    NotifyCompleteMessage?.Invoke();
                     // Sau khi hoàn thành quest, gọi RemoveQuestFromAllGivers để xóa quest khỏi tất cả QuestGiver
                     foreach (var questGiver in allQuestGivers)
                     {

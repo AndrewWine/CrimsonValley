@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 361177409977217311}
   - component: {fileID: 4247670147690593858}
   - component: {fileID: 1763162135988504071}
+  - component: {fileID: 7965243493159574412}
   m_Layer: 0
   m_Name: FarmerGirl
   m_TagString: Untagged
@@ -98,8 +99,12 @@ MonoBehaviour:
   statesParent: {fileID: 5860962025467242350}
   animator: {fileID: 2519402609069606156}
   dayNightCycle: {fileID: 0}
+  nameNPC: {fileID: 0}
   nPCIdle: {fileID: 4688706452880684421}
   nPCMove: {fileID: 7989192932853818658}
+  nPCChop: {fileID: 0}
+  nPCPickAxe: {fileID: 0}
+  nPCPlantTree: {fileID: 0}
 --- !u!114 &1763162135988504071
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -116,6 +121,22 @@ MonoBehaviour:
   stateMachine: {fileID: 8843788153171214697}
   blackboard: {fileID: 4247670147690593858}
   isScheduleComplete: 1
+--- !u!114 &7965243493159574412
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 11535055368033533}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1c5dbeceb68211f48bcfc9f06ca445a3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  questsToGive:
+  - {fileID: 11400000, guid: 128e5e1e6d6132341b462a62ff30c743, type: 2}
+  questManager: {fileID: 0}
+  questGiverID: Linda
 --- !u!1 &277655910041853292
 GameObject:
   m_ObjectHideFlags: 0

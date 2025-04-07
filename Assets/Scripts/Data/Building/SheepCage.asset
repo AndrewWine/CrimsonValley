@@ -19,4 +19,4 @@ MonoBehaviour:
   requiredItemsIcon: {fileID: 21300000, guid: 3fe6d0db39d97d34a837fd99377da1a2, type: 3}
   requiredItems:
   - Wood
-  requiredAmounts: 05000000
+  requiredAmounts: 01000000

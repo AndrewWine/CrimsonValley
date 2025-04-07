@@ -6,7 +6,6 @@ public class NPCBlackboard : EntityBlackboard
 {
     [Header("Elements")]
     public DayNightCycle dayNightCycle;
-    [SerializeField] private GameObject nameNPC;
     [Header("State")]
     public NPCIdle nPCIdle;
     public NPCMoveState nPCMove;

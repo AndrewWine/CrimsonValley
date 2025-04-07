@@ -33,15 +33,18 @@ public class InventoryManager : MonoBehaviour
     private void OnDisable()
     {
         EventBus.Unsubscribe<ItemPickedUp>(OnItemPickedUpEvent);
+
     }
 
     private void OnItemPickedUpEvent(ItemPickedUp eventData)
     {
         PickUpItemCallBack(eventData.itemName, eventData.amount);
+
     }
     public void PickUpItemCallBack(string itemName, int amount)
     {
-        Debug.Log($"Nhận vật phẩm: {itemName} (x{amount})");
+        //Debug.Log($"Nhận vật phẩm: {itemName} (x{amount})");
+        EventBus.Publish(new ShowItemPickup(itemName, amount));
 
         if (inventory == null)
         {
@@ -112,7 +115,7 @@ public class InventoryManager : MonoBehaviour
     }
 
 
-    private void SaveInventory()
+    public void SaveInventory()
     {
         string data = JsonUtility.ToJson(inventory, true);
         File.WriteAllText(dataPath, data);

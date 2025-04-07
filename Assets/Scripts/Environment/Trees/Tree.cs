@@ -114,7 +114,6 @@ public class Tree : MonoBehaviour, IDamageAble
     public void TakeDamage(float damage)
     {
         reduceDurability?.Invoke();
-        AudioManager.instance.PlaySFX(0, null);
         if (isTopTree)
         {
             ShakeTree();

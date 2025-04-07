@@ -1,7 +1,7 @@
-﻿using Unity.VisualScripting;
+﻿
 using UnityEngine;
-using UnityEngine.EventSystems;
-using static UnityEditor.Progress;
+
+
 
 public class InventoryDisplay : MonoBehaviour
 {

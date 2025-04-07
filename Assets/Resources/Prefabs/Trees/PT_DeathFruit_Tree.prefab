@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 2715590743027049244}
   - component: {fileID: 1036374958640720435}
   - component: {fileID: 8624248412166065750}
+  - component: {fileID: 2728566695833154786}
   m_Layer: 0
   m_Name: PT_DeathFruit_Tree
   m_TagString: Tree
@@ -48,12 +49,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e76e770100530840adc98deaa94c123, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemData: {fileID: 11400000, guid: 155aca2d481315a4eb712fa31cd5c770, type: 2}
   topTree: {fileID: 7434606720347316168}
   trunkTree: {fileID: 4392318374696452408}
   woodParticles: {fileID: 861844437283468692}
   rbTopTree: {fileID: 7952552766795105574}
   trunkCollider: {fileID: 5005983581137180953}
+  itemData: {fileID: 11400000, guid: 155aca2d481315a4eb712fa31cd5c770, type: 2}
   topTreeHealth: 10
   trunkTreeHealth: 10
   dropAmount: 2
@@ -78,6 +79,33 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!205 &2728566695833154786
+LODGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1549326483119233502}
+  serializedVersion: 2
+  m_LocalReferencePoint: {x: 0, y: 0, z: 0}
+  m_Size: 5
+  m_FadeMode: 0
+  m_AnimateCrossFading: 0
+  m_LastLODIsBillboard: 0
+  m_LODs:
+  - screenRelativeHeight: 0.25205186
+    fadeTransitionWidth: 0
+    renderers:
+    - renderer: {fileID: 4457686225014145556}
+    - renderer: {fileID: 2706015028430844441}
+  - screenRelativeHeight: 0.14752974
+    fadeTransitionWidth: 0
+    renderers:
+    - renderer: {fileID: 2706015028430844441}
+  - screenRelativeHeight: 0.05247068
+    fadeTransitionWidth: 0
+    renderers: []
+  m_Enabled: 1
 --- !u!1 &4392318374696452408
 GameObject:
   m_ObjectHideFlags: 0
@@ -128,7 +156,7 @@ MeshRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4392318374696452408}
   m_Enabled: 1
-  m_CastShadows: 1
+  m_CastShadows: 0
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
   m_StaticShadowCaster: 0

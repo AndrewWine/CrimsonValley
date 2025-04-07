@@ -7,7 +7,7 @@ public class DayNightCycle : MonoBehaviour
     [Header("Time Settings")]
     [SerializeField] private float totalDayLength = 15f; // 15 phút cho 1 chu kỳ ngày-đêm
     [SerializeField, Range(0f, 1f)] public float timeOfDay;
-    [SerializeField] private int dayNumber = 0, yearNumber = 0, yearLength = 100;
+    public int dayNumber = 0, yearNumber = 0, yearLength = 100;
     private float timeScale;
     public bool pause = false;
 

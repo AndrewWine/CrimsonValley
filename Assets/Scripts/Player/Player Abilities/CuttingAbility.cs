@@ -1,8 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEditor.Experimental.GraphView;
-using UnityEngine;
-using UnityEngine.Playables;
+﻿using UnityEngine;
 
 public class CuttingAbility : MonoBehaviour
 {
@@ -12,7 +8,6 @@ public class CuttingAbility : MonoBehaviour
     private bool canCut;
     private Tree targetTree;
     private PlayerBlackBoard blackBoard;
-
     [Header("Actions")]
     public static System.Action<Transform, float> Cutting;
 
@@ -48,7 +43,7 @@ public class CuttingAbility : MonoBehaviour
         if (other.CompareTag("Tree"))
         {
             targetTree = other.GetComponent<Tree>();
-        
+            blackBoard.isTree = true;
         }
     }
 
@@ -60,6 +55,8 @@ public class CuttingAbility : MonoBehaviour
         {
             //Debug.Log($"Exited tree: {other.gameObject.name}");
             targetTree = null;
+            blackBoard.isTree = false;
+
         }
     }
 

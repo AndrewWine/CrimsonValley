@@ -40191,7 +40191,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: PT_DeathPine_Tree (2)
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 2226284193863123937, guid: 2fad471f621f9c847a404dd64bb59225, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []

@@ -19,4 +19,6 @@ MonoBehaviour:
   requiredItemsIcon: {fileID: 21300000, guid: 3fe6d0db39d97d34a837fd99377da1a2, type: 3}
   requiredItems:
   - Wood
-  requiredAmounts: 14000000
+  - CopperIngot
+  - IronIngot
+  requiredAmounts: 1e0000000a00000003000000

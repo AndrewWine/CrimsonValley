@@ -19,6 +19,8 @@ TagManager:
   - Indoor
   - House
   - Decore
+  - ShadowCaster
+  - NoShadow
   layers:
   - Default
   - TransparentFX

@@ -9,6 +9,7 @@ public class SettingIngame : MonoBehaviour
     [SerializeField] private GameObject SettingRectTransform;
     [SerializeField] private GameObject openButton;
     [SerializeField] private GameObject closeButton;
+    [SerializeField] private GameObject soundEditor;
 
     private Vector3 hiddenPosition;  // Vị trí khi cửa sổ ở ngoài màn hình
     private Vector3 visiblePosition; // Vị trí khi cửa sổ mở (di chuyển vào trong)
@@ -28,6 +29,7 @@ public class SettingIngame : MonoBehaviour
         visiblePosition = hiddenPosition + new Vector3(moveDistance, 0, 0);  // Di chuyển vào 200px
         openButton.SetActive(true);
         closeButton.SetActive(false);
+        soundEditor.SetActive(false);
     }
 
     public void OnOpenWindowPressed()
@@ -76,6 +78,7 @@ public class SettingIngame : MonoBehaviour
     public void OnSaveGamePressed()
     {
         WorldManager.instance.SaveWorld();
+        InventoryManager.Instance.SaveInventory();
         Debug.Log("Da bam nut save game");
     }
 
@@ -86,5 +89,15 @@ public class SettingIngame : MonoBehaviour
         // Chuyển sang scene game trước khi load dữ liệu
         SceneManager.LoadScene("MainMenu");
 
+    }
+
+    public void EnableSoundEditor()
+    {
+        soundEditor.SetActive(true);
+    }
+
+    public void DisableSoundEditor()
+    {
+        soundEditor.SetActive(false);
     }
 }

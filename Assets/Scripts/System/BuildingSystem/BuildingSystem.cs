@@ -25,6 +25,8 @@ public class BuildingSystem : UIRequirementDisplay
 
     [Header("Actions")]
     public static Action generateButton;
+    public static Action NotifyFailMessage;
+
 
     private List<GameObject> placedBuildings = new List<GameObject>(); //  Thêm danh sách công trình đã đặt
 
@@ -172,13 +174,15 @@ public class BuildingSystem : UIRequirementDisplay
             if (!inventoryManager.FindItemByName(itemName, requiredAmount))
             {
                 hasEnough = false;
+                NotifyFailMessage?.Invoke();//NotifyMessage
                 break; //  Nếu thiếu nguyên liệu, dừng kiểm tra ngay
             }
         }
 
         if (!hasEnough)
         {
-            Debug.LogWarning("Không đủ nguyên liệu để xây dựng!");
+
+            //Debug.LogWarning("Không đủ nguyên liệu để xây dựng!");
             return;
         }
 

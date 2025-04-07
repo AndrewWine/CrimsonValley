@@ -388,6 +388,7 @@ GameObject:
   - component: {fileID: 1521190283846561501}
   - component: {fileID: 2960826418916215407}
   - component: {fileID: 3037751716257498441}
+  - component: {fileID: 7722740838413554358}
   m_Layer: 0
   m_Name: AdultMale
   m_TagString: Untagged
@@ -475,6 +476,9 @@ MonoBehaviour:
   dayNightCycle: {fileID: 0}
   nPCIdle: {fileID: 5982495856031649716}
   nPCMove: {fileID: 3149572075712398881}
+  nPCChop: {fileID: 0}
+  nPCPickAxe: {fileID: 0}
+  nPCPlantTree: {fileID: 0}
 --- !u!114 &3037751716257498441
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -491,6 +495,22 @@ MonoBehaviour:
   stateMachine: {fileID: 9103084446325030071}
   blackboard: {fileID: 2960826418916215407}
   isScheduleComplete: 1
+--- !u!114 &7722740838413554358
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3660889041821892826}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1c5dbeceb68211f48bcfc9f06ca445a3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  questsToGive:
+  - {fileID: 11400000, guid: 5437a9f905f4cc3498e807b0adb4f255, type: 2}
+  questManager: {fileID: 0}
+  questGiverID: John
 --- !u!1 &3879080410492810588
 GameObject:
   m_ObjectHideFlags: 0

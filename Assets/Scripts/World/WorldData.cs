@@ -7,9 +7,12 @@ using UnityEngine;
 public class WorldData
 {
     public string gameDateTime;
+  
+    public float _timeOfDay;
+    public int _dayNumber , _yearNumber , _yearLength;
     public List<PlacedItemData> placedItems = new List<PlacedItemData>();
     public List<PlacedBuildingData> placedBuildings = new List<PlacedBuildingData>();
-    public List<DestroyedTreeData> destroyedTrees = new List<DestroyedTreeData>(); // L?u danh sách cây b? phá h?y
+    public List<DestroyedTreeData> destroyedTrees = new List<DestroyedTreeData>(); 
 
 }
 

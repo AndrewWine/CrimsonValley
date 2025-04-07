@@ -46,8 +46,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 22701999cf7e8a44f8fac63c5686d271, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  itemData: {fileID: 0}
   cropRenderer: {fileID: 6350734033476854137}
   harvestedParticles: {fileID: 1277935926672251741}
+  TimeToGrowUp: 3000
+  isFullyGrown: 0
 --- !u!1 &2516137781434050825
 GameObject:
   m_ObjectHideFlags: 0
